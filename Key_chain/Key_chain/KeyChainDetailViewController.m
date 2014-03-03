@@ -1,0 +1,136 @@
+//
+//  KeyChainDetailViewController.m
+//  Key_chain
+//
+//  Created by Brandon Chen on 2/15/14.
+//  Copyright (c) 2014 Brandon Chen. All rights reserved.
+//
+
+#import "KeyChainDetailViewController.h"
+
+@interface KeyChainDetailViewController ()
+
+@end
+
+@implementation KeyChainDetailViewController
+
+@synthesize keychain;
+@synthesize repeatingTimer;
+@synthesize map;
+@synthesize locationManager;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.repeatingTimer invalidate];
+    
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+    UILabel *label_name = (UILabel *)[self.view viewWithTag:1];
+    label_name.text = keychain.peripheral.name;//@"key";//keychain.peripheral.name;
+
+
+    [self startRepeatingTimer];
+    
+ /*   if (!locationManager){
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.distanceFilter = kCLDistanceFilterNone;
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    }
+    [locationManager startUpdatingLocation];*/
+    
+    map.delegate = self;
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(void)startRepeatingTimer{
+    
+    // Cancel a preexisting timer.
+    [self.repeatingTimer invalidate];
+    
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.1
+                                                      target:self selector:@selector(targetMethod:)
+                                                    userInfo:[self userInfo] repeats:YES];
+    self.repeatingTimer = timer;
+}
+
+
+- (NSDictionary *)userInfo {
+    
+    return @{ @"StartDate" : [NSDate date] };
+}
+
+- (void)targetMethod:(NSTimer*)theTimer {
+    NSDate *startDate = [[theTimer userInfo] objectForKey:@"StartDate"];
+    //    NSLog(@"Timer started on %@", startDate);
+    //    NSLog(@"Read RSSI from connected Peripheral");
+    
+    UILabel *label_status = (UILabel *)[self.view viewWithTag:3];
+    label_status.text = keychain.connection_state?@"CONNECTED":@"NOT CONNECTED";
+    UILabel *label_rssi = (UILabel *)[self.view viewWithTag:2];
+    label_rssi.text = keychain.peripheral.RSSI.stringValue;
+    //keychain.peripheral.delegate = self;
+    //[keychain.peripheral readRSSI];
+    
+
+}
+
+- (void)invocationMethod:(NSDate *)date {
+    //    NSLog(@"Invocation for timer started on %@", date);
+}
+
+-(IBAction) press_findme:(id)sender {
+    UISwitch* uiswitch = (UISwitch*) sender;
+    if([uiswitch isOn]){
+        [keychain find_key:1];
+        
+    }
+    else
+    {
+        [keychain find_key:0];
+    }
+        
+}
+
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
+{
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
+    
+    [map setRegion:[map regionThatFits:region] animated:YES];
+    
+
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    CLLocation* location = [locations lastObject];
+    
+    NSLog(@"Location: %f %f\n",location.coordinate.latitude,location.coordinate.longitude);
+    
+    keychain.location = location;
+
+    
+    [self.locationManager stopUpdatingLocation];
+}
+
+
+
+@end

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 #import <CoreBluetooth/CBPeripheral.h>
-#import <CoreLocation/CoreLocation.h>
+
 #import "KeychainProfile.h"
 
 #define RED_ALERT 1
@@ -29,13 +29,9 @@
 
 @property (nonatomic,strong)CBPeripheral *peripheral;
 @property (nonatomic, strong)KeychainProfile *configProfile;
-@property NSInteger threshold;
 @property NSArray*  threshold_detail;
 @property NSInteger connection_state;
 @property NSInteger range_state;
-@property CLLocation* location;
-@property BOOL out_of_range_alert;
-@property BOOL disconnection_alert;
 @property BOOL findme_status;
 @property NSData* conn_params;
 

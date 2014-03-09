@@ -12,6 +12,9 @@
 @synthesize BDaddress;
 @synthesize name;
 @synthesize threshold;
+@synthesize out_of_range_alert;
+@synthesize disconnection_alert;
+@synthesize location;
 
 
 

@@ -270,7 +270,7 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
     for(Keychain* key in registerList) {
         if (key.peripheral == peripheral){
             key.connection_state = NOT_CONNECTED;
-            if(key.disconnection_alert){
+            if(key.configProfile.disconnection_alert){
                 [key alert:@"Disconnected"];
             }
             NSDictionary* options = @{CBConnectPeripheralOptionNotifyOnConnectionKey: @YES,
@@ -296,6 +296,11 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
     
     bool exist_in_list = false;
     
+
+    
+    //NSLog(@"%@",[advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]);
+    
+    
     for(SprintronCBPeripheral* tmp in Peripheral_list) {
         if (tmp.peripheral.identifier == peripheral.identifier) {
             exist_in_list = true;
@@ -308,6 +313,23 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
         sprintron_peripheral.peripheral = peripheral;
         sprintron_peripheral.advertisementData = advertisementData;
         [Peripheral_list addObject:sprintron_peripheral];
+    }
+    
+    for(Keychain* keychain in registerList){
+        if(!keychain.connection_state && [keychain.configProfile.BDaddress isEqualToData:[advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]]){
+
+            // make connection.
+            //sprintron_peripheral.peripheral.delegate = self;
+            // TODO: modulize this part.
+            NSDictionary* options = @{CBConnectPeripheralOptionNotifyOnConnectionKey: @YES,
+                                      CBConnectPeripheralOptionNotifyOnDisconnectionKey: @YES,
+                                      CBConnectPeripheralOptionNotifyOnNotificationKey: @YES};
+            
+            [BLECentralManager cancelPeripheralConnection:peripheral];
+            [BLECentralManager connectPeripheral:peripheral options: options];
+            NSLog(@"Start connecting");
+
+        }
     }
 }
 

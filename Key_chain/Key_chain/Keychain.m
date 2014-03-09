@@ -10,6 +10,7 @@
 #import "CoreBluetooth/CBService.h"
 #import "CoreBluetooth/CBCharacteristic.h"
 #import "CoreBluetooth/CBUUID.h"
+#import "BLECentralSingleton.h"
 
 
 @implementation Keychain
@@ -17,13 +18,25 @@
 @synthesize peripheral;
 @synthesize connection_state;
 @synthesize range_state;
+@synthesize out_of_range_alert;
+@synthesize disconnection_alert;
 @synthesize location;
 @synthesize configProfile;
+@synthesize findme_status;
+@synthesize conn_params;
 
 - (id) init {
     self.threshold = DEFAULT_THRESHOLD;
-    self.connection_state = CONNECTED;
+    self.connection_state = NOT_CONNECTED;
     self.range_state = NO_ALERT;
+    return self;
+}
+
+- (id) initWithKeyProfile:(KeychainProfile *)key_profile {
+    
+    self = [self init];
+    self.configProfile = key_profile;
+    self.findme_status = false;
     return self;
 }
 
@@ -55,44 +68,159 @@
 	return nil;
 }
 
-- (void) find_key:(NSInteger)enable{
-    unsigned char bytes = 0x0;
-    
-    if (enable)
-    {
-        bytes = 0x1;
-    
+
+- (void) set_notification {
+    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa1" andCharacteristicUUID:@"0xffc1"];
+    if (characteristic){
+        [self.peripheral setNotifyValue:YES forCharacteristic:characteristic];
     }
-    NSData *data = [NSData dataWithBytes:&bytes length:1];
+}
+
+- (void) find_key:(NSInteger)enable{
     
-    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xfff1" andCharacteristicUUID:@"0xfff6"];
+    	
+    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa5" andCharacteristicUUID:@"0xffc5"];
 	   
     //CBCharacteristic *characteristic = [[CBCharacteristic alloc] init];
 
     if (characteristic)
 	{
-		[self.peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
-	}
-
-
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-    [encoder encodeObject:self.location forKey:@"location"];
-    [encoder encodeObject:self.peripheral forKey:@"peripheral"];
-    [encoder encodeInteger:self.threshold forKey:@"threshold"];
-}
-
-- (id)initWithCoder:(NSCoder *)coder {
-    self = [super init];
-    if (self) {
-        location = [coder decodeObjectForKey:@"location"];
-        peripheral = [coder decodeObjectForKey:@"peripheral"];
-        threshold = [coder decodeFloatForKey:@"threshold"];
+        if (self.findme_status){
+            unsigned char bytes = 0x1;
+            NSData *data = [NSData dataWithBytes:&bytes length:1];
+            [self.peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
+        }
+        else {
+            unsigned char bytes = 0x0;
+            NSData *data = [NSData dataWithBytes:&bytes length:1];
+            [self.peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
+        }
     }
-    return self;
+    [self find_key_status];
+
 }
+
+- (void)find_key_status {
+    
+    
+    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa5" andCharacteristicUUID:@"0xffc5"];
+    
+    //CBCharacteristic *characteristic = [[CBCharacteristic alloc] init];
+    
+    if (characteristic)
+	{
+        peripheral.delegate = self;
+		[self.peripheral readValueForCharacteristic:characteristic];
+    
+	}
+    
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+{
+
+    if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc1"]]){
+        //NSLog(@"rssi:%@", characteristic.value);
+    }
+    else if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){
+        self.findme_status = characteristic.value ;
+    }
+    else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
+        self.conn_params = characteristic.value;
+        NSLog(@"didUpdateValue:%@\n",characteristic.UUID.data);
+        NSLog(@"Value:%@\n",characteristic.value);
+        conn_params = characteristic.value;
+    }
+}
+- (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+
+}
+
+- (void)peripheralDidUpdateRSSI:(CBPeripheral *)local_peripheral error:(NSError *)error
+{
+        /*(for(Keychain* keychain in registerList){
+     if (keychain.connection_state == CONNECTED){
+     if( [keychain.peripheral.RSSI intValue] < keychain.threshold && keychain.range_state < RED_ALERT) {
+     [keychain alert:@"out of range"];
+     keychain.range_state = RED_ALERT;
+     }
+     else if( keychain.range_state == RED_ALERT && [keychain.peripheral.RSSI intValue] > keychain.threshold+10)
+     {
+     keychain.range_state = NO_ALERT;
+     }
+     }
+     }*/
+    
+    NSMutableArray* registerlist = [BLECentralSingleton getBLERegistered_peripheral_list];
+    for(Keychain* keychain in registerlist){
+        if (keychain.peripheral == peripheral) {
+        }
+        
+    }
+    
+    //NSLog([peripheral.RSSI stringValue]);
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
+{
+    NSLog(@"%@ has services:\n",peripheral.name);
+    for(CBService * service in peripheral.services) {
+        
+        NSLog(@"%@ \n",service.UUID);
+        peripheral.delegate = self;
+        
+        
+        //[peripheral discoverCharacteristics:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0xfff6"], nil] forService:service];
+        [peripheral discoverCharacteristics:nil forService:service];
+    }
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
+{
+    NSLog(@"This service: %@  has those characteristics:\n", service.UUID);
+    for(CBCharacteristic* characteristic in service.characteristics)
+    {
+        NSLog(@"%@ \n",characteristic.UUID.data);
+        //[peripheral discoverDescriptorsForCharacteristic:characteristic];
+    }
+    
+}
+
+
+- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
+    
+    NSLog(@"update descriptor");
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+{
+    //[peripheral setNotifyValue:YES forCharacteristic:]
+    // RSSI periodic update
+    
+    //CBCharacteristic *rssi_update_characteristic = [self findCharacteristicWithServiceUUID:@"0xffa1" andCharacteristicUUID:@"0xffc1"];
+    //NSLog(@"RSSI UPDATE");
+    NSLog(@"RSSI update:%@",characteristic.value);
+    [self set_notification];
+    
+}
+- (void) connection_updateWithdata:(NSData*)data{
+    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa6" andCharacteristicUUID:@"0xffc6"];
+    
+    if (characteristic) {
+        [self.peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
+    }
+}
+    
+- (void) read_connectionParams{
+    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa6" andCharacteristicUUID:@"0xffc6"];
+
+    if (characteristic)
+    {
+        [self.peripheral readValueForCharacteristic:characteristic];
+    }
+}
+
+
 
 
 @end

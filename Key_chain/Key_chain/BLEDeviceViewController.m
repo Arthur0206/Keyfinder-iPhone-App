@@ -10,6 +10,7 @@
 #import "BLECentralSingleton.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Keychain.h"
+#import "KeyChainSettingViewController.h"
 #import "CoreBluetooth/CBService.h"
 #import "CoreBluetooth/CBCharacteristic.h"
 #import "CoreBluetooth/CBUUID.h"
@@ -23,10 +24,7 @@
 
 @synthesize BLECentralManager;
 @synthesize Peripheral_list;
-//@synthesize Peripheral_cell_list;
 @synthesize Connected_Peripheral_list;
-//@synthesize Connected_Peripheral_cell_list;
-@synthesize BLEPeripheral;
 @synthesize repeatingTimer;
 @synthesize DeviceTableView;
 @synthesize registeredPeripherallist;
@@ -63,7 +61,7 @@ UITableViewCell *connecting_cell;
     [self startRepeatingTimer];
     
     // Start scan.
-    [BLECentralManager scanForPeripheralsWithServices:nil options:nil];
+    [BLECentralManager scanForPeripheralsWithServices:[NSArray arrayWithObject:[CBUUID UUIDWithString:@"0xffa1"]] options:nil];
  
 
 }
@@ -102,35 +100,26 @@ UITableViewCell *connecting_cell;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if (section == 1)
-        return [Peripheral_list count];
-    else if(section == 0)
-        return [Connected_Peripheral_list count];
-    
-    return 0;
+    return [Peripheral_list count];
+
 
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     // The header for the section is the region name -- get this from the region at the section index.
-    if (section == 1)
-        return @"Discovered Devices";
-    else if (section == 0)
-        return @"Connected Devices";
-    else
-        return nil;
+    return @"Discovered Devices";
+ 
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    CBPeripheral *tmp_peripheral;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
@@ -140,52 +129,98 @@ UITableViewCell *connecting_cell;
         
     }
  
-    if (indexPath.section == 0){
-        tmp_peripheral = [Connected_Peripheral_list objectAtIndex:indexPath.row];
 
-    }
-    else {
-       // Configure the cell...
-        tmp_peripheral = [Peripheral_list objectAtIndex:indexPath.row];
+    SprintronCBPeripheral* sprintron_peripheral = [Peripheral_list objectAtIndex:indexPath.row];
 
-    }
     
     UILabel *label;
         
     label = (UILabel *)[cell viewWithTag:1];
     
-    label.text = tmp_peripheral.name;
+    if ([sprintron_peripheral.peripheral.name length] >0){
+        label.text = sprintron_peripheral.peripheral.name;
+    }
+    else {
+        label.text = @"~~~No Name~~~~";
+    }
     
     
     return cell;
 
 }
 
+
+/*- (void)centralManager:(CBCentralManager *)central
+  didConnectPeripheral:(CBPeripheral *)peripheral {
+    
+    NSLog(@"Peripheral %@ connected",[peripheral.identifier UUIDString]);
+    NSInteger idx;
+    
+    //NSMutableArray* registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
+    
+    [peripheral discoverServices:nil];
+    
+    
+    
+    for(SprintronCBPeripheral* sprintron_peripheral in Peripheral_list) {
+        if (sprintron_peripheral.peripheral == peripheral)
+        {
+            idx = [Peripheral_list indexOfObject:sprintron_peripheral];
+            break;
+        }
+    }
+    
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
+    
+    
+    UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *) [cell viewWithTag:4];
+    [activityIndicator stopAnimating];
+
+
+}*/
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // Scanned list.
+    // Select a device to connect.
     
-    if (indexPath.section == 1) {
-        // Scanned list.
-        // Select a device to connect.
-        
-        CBPeripheral *peripheral = [Peripheral_list objectAtIndex:indexPath.row];
-       
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        
-        // make connection.
-        peripheral.delegate = self;
-        
-        NSDictionary* options = @{CBConnectPeripheralOptionNotifyOnConnectionKey: @YES,
-                                  CBConnectPeripheralOptionNotifyOnDisconnectionKey: @YES,
-                                  CBConnectPeripheralOptionNotifyOnNotificationKey: @YES};
-        
-        [BLECentralManager cancelPeripheralConnection:peripheral];
-        [BLECentralManager connectPeripheral:peripheral options: options];
-        NSLog(@"Start connecting");
+    SprintronCBPeripheral *sprintron_peripheral = [Peripheral_list objectAtIndex:indexPath.row];
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    
+    
+    // make connection.
+    //sprintron_peripheral.peripheral.delegate = self;
+    
+    NSDictionary* options = @{CBConnectPeripheralOptionNotifyOnConnectionKey: @YES,
+                              CBConnectPeripheralOptionNotifyOnDisconnectionKey: @YES,
+                              CBConnectPeripheralOptionNotifyOnNotificationKey: @YES};
+ 
+    [BLECentralManager cancelPeripheralConnection:sprintron_peripheral.peripheral];
+    [BLECentralManager connectPeripheral:sprintron_peripheral.peripheral options: options];
+    NSLog(@"Start connecting");
+    
+    
+   /* UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *) [cell viewWithTag:4];
+    [activityIndicator startAnimating];*/
+    
+    
+}
 
+// In a story board-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    
+    if ([[segue identifier] isEqualToString:@"scan_to_setting"]) {
+        NSIndexPath *selectedRowIndex = [self.tableView indexPathForSelectedRow];
+        KeyChainSettingViewController *settingViewController = [segue destinationViewController];
+        settingViewController.sprintron_peripheral = [Peripheral_list objectAtIndex:selectedRowIndex.row];
         // deselect the cell after doing connection
-        [tableView deselectRowAtIndexPath:indexPath animated:false];
+        [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRowIndex.row inSection:0] animated:false];
+
     }
+    
     
 }
 

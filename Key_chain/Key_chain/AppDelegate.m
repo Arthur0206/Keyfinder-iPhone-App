@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "BLECentralSingleton.h"
 
 @implementation AppDelegate
 
@@ -16,6 +16,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    //load the array
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"key_profile"];
+    NSMutableArray* key_profile_list = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    NSMutableArray* registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
+    for (KeychainProfile* key_profile in  key_profile_list) {
+        [registerList addObject:[[Keychain alloc] initWithKeyProfile:key_profile]];
+    }
+    
     return YES;
 }
 							
@@ -50,20 +58,23 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     
     NSMutableArray *key_chain_config_profile = [[NSMutableArray alloc] init];
-    NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,   NSUserDomainMask, YES);
-    NSString *documentPath = ([documentPaths count] > 0) ? [documentPaths objectAtIndex:0] : nil;
-    NSString *documentsResourcesPath = [documentPath  stringByAppendingPathComponent:@"MyAppCache"];
-    NSString *fullPath = [documentsResourcesPath stringByAppendingPathComponent:@"archive.data"];
+    //KeychainProfile *key_config;
+
     
     for (Keychain* key in [BLECentralSingleton getBLERegistered_peripheral_list]) {
         [key_chain_config_profile addObject:key.configProfile];
-        
+        //key_config = key.configProfile;
     }
     
+    /*NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,   NSUserDomainMask, YES);
+    NSString *documentPath = ([documentPaths count] > 0) ? [documentPaths objectAtIndex:0] : nil;
+    NSString *documentsResourcesPath = [documentPath  stringByAppendingPathComponent:@"MyAppCache"];
+    NSString *fullPath = [documentsResourcesPath stringByAppendingPathComponent:@"archive.data"];
+    BOOL isArch = [NSKeyedArchiver archiveRootObject:key_chain_config_profile toFile:fullPath];*/
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:key_chain_config_profile];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"key_profile"];
     
-    BOOL isArch = [NSKeyedArchiver archiveRootObject:key_chain_config_profile toFile:fullPath];
-    
-    //[[NSUserDefaults standardUserDefaults] setObject:archiver forKey:@"save_list"];
+
 }
 
 

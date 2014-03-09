@@ -10,10 +10,10 @@
 
 @interface KeychainProfile : NSObject
 
-@property NSUInteger peripheral_UUID;
+@property NSString* BDaddress;
 @property NSString* name;
-@property NSInteger  threshold;
+@property NSInteger threshold;
 
--(void) initWithName:(NSString*) name;
+-(id) initWithName:(NSString*)s_name andthreshold:(NSInteger) thres andBDaddr: (NSString*)BDaddr;
 
 @end

@@ -10,6 +10,8 @@
 #import "BLECentralSingleton.h"
 #import "KeyChainDetailViewController.h"
 #import <Foundation/NSKeyedArchiver.h>
+#import "KeychainProfile.h"
+#import "Keychain.h"
 
 @interface KeyChainViewController ()
 
@@ -21,9 +23,11 @@
 
 @synthesize BLECentralManager;
 @synthesize registerList;
-@synthesize Connected_Peripheral_list;
 @synthesize Peripheral_list;
 @synthesize repeatingTimer;
+@synthesize Edit_Button;
+//@synthesize EditMode;
+
 //@synthesize locationManager;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -49,16 +53,13 @@
 {
     [super viewDidLoad];
 
- 
+    // Init all the lists.
     BLECentralManager = [BLECentralSingleton getBLECentral];
     BLECentralManager.delegate = self;
     Peripheral_list = [BLECentralSingleton getBLEPeripheral_list];
-    Connected_Peripheral_list = [BLECentralSingleton getBLEConnected_peripheral_list];
-    
-    
-    //load the array
-    
     registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
+    
+    self.tableView.delegate = self;
     
     // Do any additional setup after loading the view.
     [self startRepeatingTimer];
@@ -93,7 +94,7 @@
     // Cancel a preexisting timer.
     [self.repeatingTimer invalidate];
     
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                       target:self selector:@selector(targetMethod:)
                                                     userInfo:[self userInfo] repeats:YES];
     self.repeatingTimer = timer;
@@ -111,8 +112,10 @@
     //    NSLog(@"Read RSSI from connected Peripheral");
     
     for(Keychain* key in registerList){
-        key.peripheral.delegate =self;
-        [key.peripheral readRSSI];
+        if(key.connection_state == CONNECTED){
+            key.peripheral.delegate = key;
+            [key.peripheral readRSSI];
+        }
         
     }
 
@@ -123,24 +126,6 @@
     //    NSLog(@"Invocation for timer started on %@", date);
 }
 
-- (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error
-{
-    
-    for(Keychain* keychain in registerList){
-        if (keychain.connection_state == CONNECTED){
-            if( [keychain.peripheral.RSSI intValue] < keychain.threshold && keychain.range_state < RED_ALERT) {
-                [keychain alert:@"out of range"];
-                keychain.range_state = RED_ALERT;
-            }
-            else if( keychain.range_state == RED_ALERT && [keychain.peripheral.RSSI intValue] > keychain.threshold+10)
-            {
-                keychain.range_state = NO_ALERT;
-            }
-        }
-    }
-}
-
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 #warning Potentially incomplete method implementation.
@@ -148,13 +133,12 @@
     return 1;
 }
 
-
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [registerList count];
     
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -175,12 +159,46 @@
     
     label = (UILabel *)[cell viewWithTag:1];
     
-    label.text = keychain.peripheral.name;
-    
+   
+    label.text = keychain.configProfile.name;
+  
     
     return cell;
     
 }
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return YES;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    return UITableViewCellEditingStyleDelete;
+}
+
+
+     
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+     [registerList removeObjectAtIndex:indexPath.row];
+    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationTop];
+}
+
+- (IBAction)enterEditMode:(id)sender {
+    static int flag = 0;
+    if(!flag) {
+       [self.tableView setEditing:YES animated:YES];
+        [self.Edit_Button setTitle:@"Done" forState:UIControlStateNormal];
+        flag = 1;
+    }
+    else {
+        [self.tableView setEditing:NO animated:YES];
+        [self.Edit_Button setTitle:@"Edit" forState:UIControlStateNormal];
+        flag = 0;
+    }
+}
+
 
 - (void) startNotifyingForServiceUUID:(NSString *) serviceUUID andCharacteristicUUID:(NSString *) charUUID Peripheral:(CBPeripheral*) peripheral
 {
@@ -211,42 +229,35 @@
 }
 
 
-
 - (void)centralManager:(CBCentralManager *)central
   didConnectPeripheral:(CBPeripheral *)peripheral {
     
     NSLog(@"Peripheral %@ connected",[peripheral.identifier UUIDString]);
     
 
-
+    //[self startNotifyingForServiceUUID:@"0xFFF1" andCharacteristicUUID:@"0xFFF2" Peripheral:peripheral];
     
-    [self startNotifyingForServiceUUID:@"0xFFF1" andCharacteristicUUID:@"0xFFF2" Peripheral:peripheral];
+    /*for(SprintronCBPeripheral* sprintron_peripheral in Peripheral_list){
+        if(sprintron_peripheral.peripheral.identifier == peripheral.identifier){
+            [Peripheral_list removeObject:sprintron_peripheral];
+            break;
+        }
+    }*/
+ /*
+    for(Keychain* key in registerList){
+        if (key.peripheral == peripheral){
+            key.connection_state = CONNECTED;
+            key.peripheral.delegate = key;
+            [peripheral discoverServices:nil];
+            break;
+        }
+    }*/
     
-    [Connected_Peripheral_list addObject:peripheral];
-    
-    NSInteger idx = [Peripheral_list indexOfObject:peripheral];
-    
-    if (idx != NSNotFound)
-        [Peripheral_list removeObjectAtIndex:idx];
-    
-    
-    
-    Keychain *key;
-    
-    for(Keychain* keychain in registerList){
-        if (keychain.peripheral == peripheral)
-            goto SKIP;
-    }
-    key = [[Keychain alloc] init];
-    key.configProfile = [[KeychainProfile alloc] initWithName:peripheral.name];
-    key.peripheral = peripheral;
-                         
-    [registerList addObject:key];
-SKIP:
-    
-    peripheral.delegate = self;
-    [peripheral discoverServices:nil];
-
+    Keychain *key_chain = [Keychain alloc];
+    key_chain.peripheral = peripheral;
+    peripheral.delegate = key_chain;
+    [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID UUIDWithString:@"0xffa6"],nil ]];
+    [registerList addObject: key_chain];
     
 }
 
@@ -255,8 +266,6 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error {
     
     NSLog(@"####%@ disconnected#####",peripheral.name);
-    NSInteger idx = [Connected_Peripheral_list indexOfObject:peripheral];
-    [Connected_Peripheral_list removeObject:peripheral];
     
     for(Keychain* key in registerList) {
         if (key.peripheral == peripheral){
@@ -267,9 +276,8 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
                                       CBConnectPeripheralOptionNotifyOnDisconnectionKey: @YES,
                                       CBConnectPeripheralOptionNotifyOnNotificationKey: @YES};
             
-            [BLECentralManager connectPeripheral:peripheral options: options];
+            //[BLECentralManager connectPeripheral:peripheral options: options];
 
-            [BLECentralManager connectPeripheral:peripheral options:nil];
         }
     }
     
@@ -284,11 +292,21 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
     // NSLog(@"Discovered %@ %@ %@", peripheral.name, peripheral.identifier, advertisementData);
     NSLog(@"Discovered %@", RSSI.stringValue);
     
-    NSUInteger objIdx = [Peripheral_list indexOfObject: peripheral];
-    if (objIdx == NSNotFound) {
-        [Peripheral_list addObject:peripheral];
+    bool exist_in_list = false;
+    
+    for(SprintronCBPeripheral* tmp in Peripheral_list) {
+        if (tmp.peripheral.identifier == peripheral.identifier) {
+            exist_in_list = true;
+            break;
+        }
     }
     
+    if(!exist_in_list) {
+        SprintronCBPeripheral* sprintron_peripheral = [SprintronCBPeripheral alloc];
+        sprintron_peripheral.peripheral = peripheral;
+        sprintron_peripheral.advertisementData = advertisementData;
+        [Peripheral_list addObject:sprintron_peripheral];
+    }
 }
 
 
@@ -296,11 +314,7 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
 - (void) centralManager:(CBCentralManager *)central
 didRetrieveConnectedPeripherals:(NSArray *)peripherals {
     NSLog(@"Currently connected peripherals :");
-    int i = 0;
-    for(CBPeripheral *peripheral in peripherals) {
-        NSLog(@"[%d] - peripheral : %@ with UUID : %@",i,peripheral,peripheral.UUID);
-        //Do something on each connected peripheral.
-    }
+
 }
 
 - (void) centralManager:(CBCentralManager *)central
@@ -345,41 +359,8 @@ didRetrieveConnectedPeripherals:(NSArray *)peripherals {
 }
 
 
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
-{
-    NSLog(@"%@ has services:\n",peripheral.name);
-    for(CBService * service in peripheral.services) {
-        
-        NSLog(@"%@ \n",service.UUID);
-        peripheral.delegate = self;
-        
-        
-        //[peripheral discoverCharacteristics:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0xfff6"], nil] forService:service];
-        
-        
-        
-        
-        
-        
-        [peripheral discoverCharacteristics:nil forService:service];
-    }
-}
 
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
-{
-    NSLog(@"This service: %@  has those characteristics:\n", service.UUID);
-    for(CBCharacteristic* characteristic in service.characteristics)
-    {
-        NSLog(@"%@ \n",characteristic.UUID);
-    }
-    
-}
 
-- (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
-{
-    //[peripheral setNotifyValue:YES forCharacteristic:]
-    
-}
 
 
 

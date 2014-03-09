@@ -14,7 +14,6 @@
 		36A5A558187D2AB40011D16E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A5A557187D2AB40011D16E /* main.m */; };
 		36A5A55C187D2AB40011D16E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A5A55B187D2AB40011D16E /* AppDelegate.m */; };
 		36A5A55F187D2AB40011D16E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 36A5A55D187D2AB40011D16E /* Main.storyboard */; };
-		36A5A565187D2AB40011D16E /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A5A564187D2AB40011D16E /* SecondViewController.m */; };
 		36A5A567187D2AB40011D16E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36A5A566187D2AB40011D16E /* Images.xcassets */; };
 		36A5A56E187D2AB40011D16E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A5A56D187D2AB40011D16E /* XCTest.framework */; };
 		36A5A56F187D2AB40011D16E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A5A54B187D2AB40011D16E /* Foundation.framework */; };
@@ -24,6 +23,9 @@
 		36A5A585187D2C470011D16E /* BLECentralSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A5A584187D2C470011D16E /* BLECentralSingleton.m */; };
 		36A5A588187DB4F90011D16E /* KeyChainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A5A587187DB4F90011D16E /* KeyChainViewController.m */; };
 		36A5A58B187DB7640011D16E /* BLEDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36A5A58A187DB7640011D16E /* BLEDeviceViewController.m */; };
+		36C3419418C75D630022BD0A /* KeyChainSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419318C75D630022BD0A /* KeyChainSettingViewController.m */; };
+		36C3419718C839730022BD0A /* SprintronCBPeripheral.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419618C839730022BD0A /* SprintronCBPeripheral.m */; };
+		36C3419A18CC7E9B0022BD0A /* Conn_params_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419918CC7E9B0022BD0A /* Conn_params_ViewController.m */; };
 		36F9A9C318B9CE8A00DFFCEA /* KeychainProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F9A9C218B9CE8A00DFFCEA /* KeychainProfile.m */; };
 		36F9EC3718AF1F4500B7E664 /* Keychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F9EC3618AF1F4500B7E664 /* Keychain.m */; };
 		36F9EC3A18B080FF00B7E664 /* KeyChainDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F9EC3918B080FF00B7E664 /* KeyChainDetailViewController.m */; };
@@ -53,8 +55,6 @@
 		36A5A55A187D2AB40011D16E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		36A5A55B187D2AB40011D16E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		36A5A55E187D2AB40011D16E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		36A5A563187D2AB40011D16E /* SecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecondViewController.h; sourceTree = "<group>"; };
-		36A5A564187D2AB40011D16E /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
 		36A5A566187D2AB40011D16E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		36A5A56C187D2AB40011D16E /* Key_chainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Key_chainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		36A5A56D187D2AB40011D16E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -67,6 +67,12 @@
 		36A5A587187DB4F90011D16E /* KeyChainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChainViewController.m; sourceTree = "<group>"; };
 		36A5A589187DB7640011D16E /* BLEDeviceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDeviceViewController.h; sourceTree = "<group>"; };
 		36A5A58A187DB7640011D16E /* BLEDeviceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLEDeviceViewController.m; sourceTree = "<group>"; };
+		36C3419218C75D630022BD0A /* KeyChainSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChainSettingViewController.h; sourceTree = "<group>"; };
+		36C3419318C75D630022BD0A /* KeyChainSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChainSettingViewController.m; sourceTree = "<group>"; };
+		36C3419518C839730022BD0A /* SprintronCBPeripheral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SprintronCBPeripheral.h; sourceTree = "<group>"; };
+		36C3419618C839730022BD0A /* SprintronCBPeripheral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SprintronCBPeripheral.m; sourceTree = "<group>"; };
+		36C3419818CC7E9B0022BD0A /* Conn_params_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conn_params_ViewController.h; sourceTree = "<group>"; };
+		36C3419918CC7E9B0022BD0A /* Conn_params_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Conn_params_ViewController.m; sourceTree = "<group>"; };
 		36F9A9C118B9CE8A00DFFCEA /* KeychainProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainProfile.h; sourceTree = "<group>"; };
 		36F9A9C218B9CE8A00DFFCEA /* KeychainProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainProfile.m; sourceTree = "<group>"; };
 		36F9EC3518AF1F4500B7E664 /* Keychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keychain.h; sourceTree = "<group>"; };
@@ -137,20 +143,24 @@
 			children = (
 				36A5A583187D2C470011D16E /* BLECentralSingleton.h */,
 				36A5A584187D2C470011D16E /* BLECentralSingleton.m */,
-				36A5A586187DB4F90011D16E /* KeyChainViewController.h */,
-				36A5A587187DB4F90011D16E /* KeyChainViewController.m */,
+				36C3419518C839730022BD0A /* SprintronCBPeripheral.h */,
+				36C3419618C839730022BD0A /* SprintronCBPeripheral.m */,
 				36F9EC3B18B2E89100B7E664 /* SprintronBLECentral.h */,
 				36F9EC3C18B2E89100B7E664 /* SprintronBLECentral.m */,
+				36A5A586187DB4F90011D16E /* KeyChainViewController.h */,
+				36A5A587187DB4F90011D16E /* KeyChainViewController.m */,
 				36F9EC3818B080FF00B7E664 /* KeyChainDetailViewController.h */,
 				36F9EC3918B080FF00B7E664 /* KeyChainDetailViewController.m */,
+				36C3419218C75D630022BD0A /* KeyChainSettingViewController.h */,
+				36C3419318C75D630022BD0A /* KeyChainSettingViewController.m */,
+				36A5A589187DB7640011D16E /* BLEDeviceViewController.h */,
+				36A5A58A187DB7640011D16E /* BLEDeviceViewController.m */,
 				36F9EC3518AF1F4500B7E664 /* Keychain.h */,
 				36F9EC3618AF1F4500B7E664 /* Keychain.m */,
 				36F9A9C118B9CE8A00DFFCEA /* KeychainProfile.h */,
 				36F9A9C218B9CE8A00DFFCEA /* KeychainProfile.m */,
-				36A5A589187DB7640011D16E /* BLEDeviceViewController.h */,
-				36A5A58A187DB7640011D16E /* BLEDeviceViewController.m */,
-				36A5A563187D2AB40011D16E /* SecondViewController.h */,
-				36A5A564187D2AB40011D16E /* SecondViewController.m */,
+				36C3419818CC7E9B0022BD0A /* Conn_params_ViewController.h */,
+				36C3419918CC7E9B0022BD0A /* Conn_params_ViewController.m */,
 				36A5A55D187D2AB40011D16E /* Main.storyboard */,
 				36A5A566187D2AB40011D16E /* Images.xcassets */,
 				36A5A552187D2AB40011D16E /* Supporting Files */,
@@ -295,7 +305,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				36A5A565187D2AB40011D16E /* SecondViewController.m in Sources */,
+				36C3419418C75D630022BD0A /* KeyChainSettingViewController.m in Sources */,
+				36C3419718C839730022BD0A /* SprintronCBPeripheral.m in Sources */,
+				36C3419A18CC7E9B0022BD0A /* Conn_params_ViewController.m in Sources */,
 				36F9A9C318B9CE8A00DFFCEA /* KeychainProfile.m in Sources */,
 				36F9EC3D18B2E89100B7E664 /* SprintronBLECentral.m in Sources */,
 				36F9EC3718AF1F4500B7E664 /* Keychain.m in Sources */,

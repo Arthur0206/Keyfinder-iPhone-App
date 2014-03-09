@@ -9,14 +9,36 @@
 #import "KeychainProfile.h"
 
 @implementation KeychainProfile
-@synthesize peripheral_UUID;
+@synthesize BDaddress;
 @synthesize name;
 @synthesize threshold;
 
 
 
--(void) initWithName:(NSString*) name {
-    self.name = name;
+-(id) initWithName:(NSString*)s_name andthreshold:(NSInteger) thres andBDaddr: (NSString*)BDaddr {
+    self.name = s_name;
+    self.threshold = thres;
+    self.BDaddress = BDaddr;
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [encoder encodeObject:BDaddress forKey:@"BLTH address"];
+    [encoder encodeInteger:threshold forKey:@"threshold"];
+    [encoder encodeObject:name forKey:@"name"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    
+    self = [super init];
+    
+    if (self) {
+        BDaddress = [decoder decodeObjectForKey:@"BLTH address"];
+        threshold = [decoder decodeIntegerForKey:@"threshold"];
+        name = [decoder decodeObjectForKey:@"name"];
+    }
+
+    return self;
 }
 
 

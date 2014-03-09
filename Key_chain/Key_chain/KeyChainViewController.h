@@ -8,17 +8,25 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreBluetooth/CoreBluetooth.h>
-#import <CoreBluetooth/CBPeripheral.h>
 #import <CoreLocation/CoreLocation.h>
 #import <CoreBluetooth/CBService.h>
+#import "SprintronCBPeripheral.h"
 
-@interface KeyChainViewController : UITableViewController <CBCentralManagerDelegate, CBPeripheralDelegate >
+
+@interface KeyChainViewController : UITableViewController <CBCentralManagerDelegate,UITableViewDelegate >
 
 @property(nonatomic,strong) CBCentralManager *BLECentralManager;
 @property(nonatomic,strong) NSMutableArray* registerList;
-@property(nonatomic,strong) NSMutableArray* Connected_Peripheral_list;
 @property(nonatomic,strong) NSMutableArray* Peripheral_list;
 @property(nonatomic,strong) NSTimer* repeatingTimer;
+@property (weak, nonatomic) IBOutlet UIButton *Edit_Button;
+
+//@property (weak, nonatomic) IBOutlet UIBarButtonItem *EditMode;
+
+- (IBAction)enterEditMode:(id)sender;
+
+
+
 //@property(nonatomic,strong) CLLocationManager *locationManager;
 
 

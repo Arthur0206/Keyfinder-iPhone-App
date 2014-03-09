@@ -10,13 +10,19 @@
 #import <MapKit/MapKit.h>
 #import "Keychain.h"
 
-@interface KeyChainDetailViewController : UIViewController <CLLocationManagerDelegate>
+@interface KeyChainDetailViewController : UITableViewController <CLLocationManagerDelegate>
 @property(strong,nonatomic) Keychain *keychain;
 @property (weak, nonatomic) IBOutlet UISwitch *FindMe;
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (weak) NSTimer *repeatingTimer;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 -(IBAction) press_findme:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *find_me_button;
 
-
+@property (weak, nonatomic) IBOutlet UISwitch *out_of_range_alert_from_ui;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *alert_threshold_from_ui;
+@property (weak, nonatomic) IBOutlet UISwitch *disconnection_alert_from_ui;
+@property (weak, nonatomic) IBOutlet UILabel *status_label;
+@property (weak, nonatomic) IBOutlet UILabel *rssi_label;
+@property (weak, nonatomic) IBOutlet UILabel *name_label;
 @end

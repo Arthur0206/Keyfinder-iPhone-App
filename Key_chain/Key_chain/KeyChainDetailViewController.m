@@ -7,6 +7,7 @@
 //
 
 #import "KeyChainDetailViewController.h"
+#import "Conn_params_ViewController.h"
 
 @interface KeyChainDetailViewController ()
 
@@ -38,9 +39,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    UILabel *label_name = (UILabel *)[self.view viewWithTag:1];
-    label_name.text = keychain.peripheral.name;//@"key";//keychain.peripheral.name;
-
+    
+    self.name_label.text = keychain.configProfile.name;//@"key";//keychain.peripheral.name;
+    self.out_of_range_alert_from_ui.on = keychain.out_of_range_alert;
+    self.disconnection_alert_from_ui.on = keychain.disconnection_alert;
+    self.status_label.text = keychain.connection_state?@"CONNECTED":@"NOT CONNECTED";
+    self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
 
     [self startRepeatingTimer];
     
@@ -79,14 +83,13 @@
 }
 
 - (void)targetMethod:(NSTimer*)theTimer {
-    NSDate *startDate = [[theTimer userInfo] objectForKey:@"StartDate"];
-    //    NSLog(@"Timer started on %@", startDate);
+    //NSDate *startDate = [[theTimer userInfo] objectForKey:@"StartDate"];
+    //NSLog(@"Timer started on %@", startDate);
     //    NSLog(@"Read RSSI from connected Peripheral");
     
-    UILabel *label_status = (UILabel *)[self.view viewWithTag:3];
-    label_status.text = keychain.connection_state?@"CONNECTED":@"NOT CONNECTED";
-    UILabel *label_rssi = (UILabel *)[self.view viewWithTag:2];
-    label_rssi.text = keychain.peripheral.RSSI.stringValue;
+    self.status_label.text = keychain.connection_state?@"CONNECTED":@"NOT CONNECTED";
+    self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
+
     //keychain.peripheral.delegate = self;
     //[keychain.peripheral readRSSI];
     
@@ -98,17 +101,15 @@
 }
 
 -(IBAction) press_findme:(id)sender {
-    UISwitch* uiswitch = (UISwitch*) sender;
-    if([uiswitch isOn]){
-        [keychain find_key:1];
-        
-    }
-    else
-    {
-        [keychain find_key:0];
-    }
+    
+    
+    [keychain find_key:1];
+ 
+    [keychain find_key:0];
+
         
 }
+
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
@@ -131,6 +132,14 @@
     [self.locationManager stopUpdatingLocation];
 }
 
+// In a story board-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
 
+    if ([[segue identifier] isEqualToString:@"detailToConnParams"]) {
+        Conn_params_ViewController* controller = [segue destinationViewController];
+        controller.keychain = keychain;
+    }
+}
 
 @end

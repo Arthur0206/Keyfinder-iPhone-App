@@ -315,7 +315,7 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
         [Peripheral_list addObject:sprintron_peripheral];
     }
     
-    for(Keychain* keychain in registerList){
+/*    for(Keychain* keychain in registerList){
         if(!keychain.connection_state && [keychain.configProfile.BDaddress isEqualToData:[advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]]){
 
             // make connection.
@@ -330,7 +330,7 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
             NSLog(@"Start connecting");
 
         }
-    }
+    }*/
 }
 
 

@@ -16,9 +16,11 @@
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (weak) NSTimer *repeatingTimer;
 @property (strong, nonatomic) CLLocationManager *locationManager;
--(IBAction) press_findme:(id)sender;
+- (IBAction) press_findme:(id)sender;
+- (IBAction)out_of_rang_alert_switch:(id)sender;
+- (IBAction)alert_threshold_change:(id)sender;
+- (IBAction)disconnection_alert_switch:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *find_me_button;
-
 @property (weak, nonatomic) IBOutlet UISwitch *out_of_range_alert_from_ui;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *alert_threshold_from_ui;
 @property (weak, nonatomic) IBOutlet UISwitch *disconnection_alert_from_ui;

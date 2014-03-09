@@ -275,6 +275,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MdK-3j-zLf">
                                                     <rect key="frame" x="258" y="4" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="out_of_rang_alert_switch:" destination="lYu-V0-aOO" eventType="valueChanged" id="ivS-qP-ti2"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -300,6 +303,9 @@
                                                         <segment title="Mid"/>
                                                         <segment title="Short"/>
                                                     </segments>
+                                                    <connections>
+                                                        <action selector="alert_threshold_change:" destination="lYu-V0-aOO" eventType="valueChanged" id="bK8-fG-hqn"/>
+                                                    </connections>
                                                 </segmentedControl>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -320,6 +326,9 @@
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nB0-VG-sn7">
                                                     <rect key="frame" x="256" y="5" width="51" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="disconnection_alert_switch:" destination="lYu-V0-aOO" eventType="valueChanged" id="Cc4-xl-Gfa"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -354,7 +363,7 @@
                     <navigationItem key="navigationItem" id="bLb-RV-jeT"/>
                     <connections>
                         <outlet property="alert_threshold_from_ui" destination="95B-3F-15R" id="uVT-c0-V04"/>
-                        <outlet property="disconnection_alert_from_ui" destination="nB0-VG-sn7" id="ODp-4D-oSB"/>
+                        <outlet property="disconnection_alert_from_ui" destination="nB0-VG-sn7" id="rPc-02-WAZ"/>
                         <outlet property="find_me_button" destination="tAQ-ie-B09" id="k2c-Rg-tL8"/>
                         <outlet property="name_label" destination="nPA-Ts-qu6" id="Z3Z-QP-IH6"/>
                         <outlet property="out_of_range_alert_from_ui" destination="MdK-3j-zLf" id="jWG-ii-D7L"/>

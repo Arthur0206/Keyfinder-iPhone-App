@@ -110,6 +110,7 @@
                 key_chain.configProfile = key_profile;
                 key_chain.connection_state = CONNECTED;
                 key_chain.out_of_range_alert = self.out_of_range_alert_setting_from_ui.on;
+                key_chain.threshold = self.threshold_setting_from_ui.selectedSegmentIndex;
                 key_chain.disconnection_alert = self.disconnection_alert_setting_from_ui.on;
                 [key_chain set_notification];
                 [key_chain read_connectionParams];

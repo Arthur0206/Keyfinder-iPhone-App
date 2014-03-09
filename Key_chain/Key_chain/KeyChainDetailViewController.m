@@ -110,6 +110,18 @@
         
 }
 
+- (IBAction)out_of_rang_alert_switch:(id)sender {
+    keychain.out_of_range_alert = self.out_of_range_alert_from_ui.on;
+}
+
+- (IBAction)alert_threshold_change:(id)sender {
+    keychain.threshold = self.alert_threshold_from_ui.selectedSegmentIndex;
+}
+
+- (IBAction)disconnection_alert_switch:(id)sender {
+    keychain.disconnection_alert = self.disconnection_alert_from_ui.on;
+}
+
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {

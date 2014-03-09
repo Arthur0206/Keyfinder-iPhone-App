@@ -18,14 +18,19 @@
 #define NOT_CONNECTED 0
 #define CONNECTED 1
 
-#define DEFAULT_THRESHOLD -90
 
+#define HIGH_THRESHOLD -95
+#define MID_THRESHOLD -85
+#define LOW_THRESHOLD -75
 
 @interface Keychain : NSObject <CBPeripheralDelegate>
+
+
 
 @property (nonatomic,strong)CBPeripheral *peripheral;
 @property (nonatomic, strong)KeychainProfile *configProfile;
 @property NSInteger threshold;
+@property NSArray*  threshold_detail;
 @property NSInteger connection_state;
 @property NSInteger range_state;
 @property CLLocation* location;
@@ -33,6 +38,7 @@
 @property BOOL disconnection_alert;
 @property BOOL findme_status;
 @property NSData* conn_params;
+
 
 - (id) init;
 - (id) initWithKeyProfile:(KeychainProfile*) key_profile;

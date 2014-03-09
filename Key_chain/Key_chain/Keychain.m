@@ -12,9 +12,14 @@
 #import "CoreBluetooth/CBUUID.h"
 #import "BLECentralSingleton.h"
 
+@interface Keychain ()
+
+@end
 
 @implementation Keychain
+
 @synthesize threshold;
+@synthesize threshold_detail;
 @synthesize peripheral;
 @synthesize connection_state;
 @synthesize range_state;
@@ -26,9 +31,11 @@
 @synthesize conn_params;
 
 - (id) init {
-    self.threshold = DEFAULT_THRESHOLD;
+    //self.threshold = DEFAULT_THRESHOLD;
     self.connection_state = NOT_CONNECTED;
     self.range_state = NO_ALERT;
+    self.findme_status = false;
+    self.threshold_detail = [NSArray arrayWithObjects:[NSNumber numberWithInt:HIGH_THRESHOLD],[NSNumber numberWithInt:MID_THRESHOLD],[NSNumber numberWithInt:LOW_THRESHOLD],nil];
     return self;
 }
 
@@ -36,7 +43,6 @@
     
     self = [self init];
     self.configProfile = key_profile;
-    self.findme_status = false;
     return self;
 }
 
@@ -80,8 +86,6 @@
     
     	
     CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa5" andCharacteristicUUID:@"0xffc5"];
-	   
-    //CBCharacteristic *characteristic = [[CBCharacteristic alloc] init];
 
     if (characteristic)
 	{
@@ -105,7 +109,6 @@
     
     CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa5" andCharacteristicUUID:@"0xffc5"];
     
-    //CBCharacteristic *characteristic = [[CBCharacteristic alloc] init];
     
     if (characteristic)
 	{
@@ -133,10 +136,12 @@
     }
 }
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-
+    if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
+        [self read_connectionParams];
+    }
 }
 
-- (void)peripheralDidUpdateRSSI:(CBPeripheral *)local_peripheral error:(NSError *)error
+- (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error
 {
         /*(for(Keychain* keychain in registerList){
      if (keychain.connection_state == CONNECTED){
@@ -151,13 +156,19 @@
      }
      }*/
     
-    NSMutableArray* registerlist = [BLECentralSingleton getBLERegistered_peripheral_list];
-    for(Keychain* keychain in registerlist){
-        if (keychain.peripheral == peripheral) {
+    NSLog(@"RSSI:%d",[peripheral.RSSI intValue]);
+    if(out_of_range_alert){
+        
+        NSInteger threshold_int = [[threshold_detail objectAtIndex:threshold] intValue];
+        if ([peripheral.RSSI intValue] < threshold_int && range_state < RED_ALERT) {
+            [self alert:@"out of range"];
+            range_state = RED_ALERT;
+        }
+        else if( range_state == RED_ALERT && [peripheral.RSSI intValue] > threshold_int + 20) {
+            range_state = NO_ALERT;
         }
         
     }
-    
     //NSLog([peripheral.RSSI stringValue]);
 }
 
@@ -199,7 +210,8 @@
     
     //CBCharacteristic *rssi_update_characteristic = [self findCharacteristicWithServiceUUID:@"0xffa1" andCharacteristicUUID:@"0xffc1"];
     //NSLog(@"RSSI UPDATE");
-    NSLog(@"RSSI update:%@",characteristic.value);
+//    NSLog(@"RSSI update:%@",characteristic.value);
+    [self.peripheral readRSSI];
     [self set_notification];
     
 }

@@ -62,7 +62,7 @@
     self.tableView.delegate = self;
     
     // Do any additional setup after loading the view.
-    [self startRepeatingTimer];
+    //[self startRepeatingTimer];
     
 
     
@@ -253,7 +253,7 @@
         }
     }*/
     
-    Keychain *key_chain = [Keychain alloc];
+    Keychain *key_chain = [[Keychain alloc] init];
     key_chain.peripheral = peripheral;
     peripheral.delegate = key_chain;
     [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID UUIDWithString:@"0xffa6"],nil ]];
@@ -270,13 +270,15 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
     for(Keychain* key in registerList) {
         if (key.peripheral == peripheral){
             key.connection_state = NOT_CONNECTED;
-//            [key alert:@"Disconnected"];
-            
+            if(key.disconnection_alert){
+                [key alert:@"Disconnected"];
+            }
             NSDictionary* options = @{CBConnectPeripheralOptionNotifyOnConnectionKey: @YES,
                                       CBConnectPeripheralOptionNotifyOnDisconnectionKey: @YES,
                                       CBConnectPeripheralOptionNotifyOnNotificationKey: @YES};
             
-            //[BLECentralManager connectPeripheral:peripheral options: options];
+            [BLECentralManager connectPeripheral:peripheral options: options];
+            break;
 
         }
     }

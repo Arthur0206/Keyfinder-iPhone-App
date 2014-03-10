@@ -104,14 +104,14 @@
         NSString* name = name_input_from_ui.text;
         NSInteger threshold = self.threshold_setting_from_ui.selectedSegmentIndex;
         
-        KeychainProfile *key_profile = [[KeychainProfile alloc] initWithName:name andthreshold: threshold andBDaddr:[self.sprintron_peripheral.advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]];
+        KeychainProfile *key_profile = [[KeychainProfile alloc] initWithName:name andthreshold: threshold andBDaddr:self.sprintron_peripheral.peripheral.name];
         for(Keychain* key_chain in [BLECentralSingleton getBLERegistered_peripheral_list]){
             if (key_chain.peripheral == sprintron_peripheral.peripheral){
                 key_chain.configProfile = key_profile;
-                //key_chain.connection_state = CONNECTED;
-                key_chain.configProfile.out_of_range_alert = self.out_of_range_alert_setting_from_ui.on;
-                key_chain.configProfile.threshold = self.threshold_setting_from_ui.selectedSegmentIndex;
-                key_chain.configProfile.disconnection_alert = self.disconnection_alert_setting_from_ui.on;
+                key_chain.connection_state = CONNECTED;
+                key_chain.out_of_range_alert = self.out_of_range_alert_setting_from_ui.on;
+                key_chain.threshold = self.threshold_setting_from_ui.selectedSegmentIndex;
+                key_chain.disconnection_alert = self.disconnection_alert_setting_from_ui.on;
                 [key_chain set_notification];
                 [key_chain read_connectionParams];
                 break;

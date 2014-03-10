@@ -7,16 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreLocation/CoreLocation.h>
 
 @interface KeychainProfile : NSObject
 
-@property NSData* BDaddress;
+@property NSString* BDaddress;
 @property NSString* name;
 @property NSInteger threshold;
-@property BOOL out_of_range_alert;
-@property BOOL disconnection_alert;
-@property CLLocation* location;
 
 -(id) initWithName:(NSString*)s_name andthreshold:(NSInteger) thres andBDaddr: (NSString*)BDaddr;
 

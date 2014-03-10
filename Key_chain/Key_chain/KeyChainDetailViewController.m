@@ -41,8 +41,9 @@
 	// Do any additional setup after loading the view.
     
     self.name_label.text = keychain.configProfile.name;//@"key";//keychain.peripheral.name;
-    self.out_of_range_alert_from_ui.on = keychain.out_of_range_alert;
-    self.disconnection_alert_from_ui.on = keychain.disconnection_alert;
+    self.out_of_range_alert_from_ui.on = keychain.configProfile.out_of_range_alert;
+    self.disconnection_alert_from_ui.on = keychain.configProfile.disconnection_alert;
+    self.alert_threshold_from_ui.selectedSegmentIndex = keychain.configProfile.threshold;
     self.status_label.text = keychain.connection_state?@"CONNECTED":@"NOT CONNECTED";
     self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
 
@@ -111,15 +112,15 @@
 }
 
 - (IBAction)out_of_rang_alert_switch:(id)sender {
-    keychain.out_of_range_alert = self.out_of_range_alert_from_ui.on;
+    keychain.configProfile.out_of_range_alert = self.out_of_range_alert_from_ui.on;
 }
 
 - (IBAction)alert_threshold_change:(id)sender {
-    keychain.threshold = self.alert_threshold_from_ui.selectedSegmentIndex;
+    keychain.configProfile.threshold = self.alert_threshold_from_ui.selectedSegmentIndex;
 }
 
 - (IBAction)disconnection_alert_switch:(id)sender {
-    keychain.disconnection_alert = self.disconnection_alert_from_ui.on;
+    keychain.configProfile.disconnection_alert = self.disconnection_alert_from_ui.on;
 }
 
 
@@ -138,7 +139,7 @@
     
     NSLog(@"Location: %f %f\n",location.coordinate.latitude,location.coordinate.longitude);
     
-    keychain.location = location;
+    keychain.configProfile.location = location;
 
     
     [self.locationManager stopUpdatingLocation];

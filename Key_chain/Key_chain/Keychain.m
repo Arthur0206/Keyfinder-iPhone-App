@@ -18,14 +18,10 @@
 
 @implementation Keychain
 
-@synthesize threshold;
 @synthesize threshold_detail;
 @synthesize peripheral;
 @synthesize connection_state;
 @synthesize range_state;
-@synthesize out_of_range_alert;
-@synthesize disconnection_alert;
-@synthesize location;
 @synthesize configProfile;
 @synthesize findme_status;
 @synthesize conn_params;
@@ -157,9 +153,9 @@
      }*/
     
     NSLog(@"RSSI:%d",[peripheral.RSSI intValue]);
-    if(out_of_range_alert){
+    if(configProfile.out_of_range_alert){
         
-        NSInteger threshold_int = [[threshold_detail objectAtIndex:threshold] intValue];
+        NSInteger threshold_int = [[threshold_detail objectAtIndex:configProfile.threshold] intValue];
         if ([peripheral.RSSI intValue] < threshold_int && range_state < RED_ALERT) {
             [self alert:@"out of range"];
             range_state = RED_ALERT;

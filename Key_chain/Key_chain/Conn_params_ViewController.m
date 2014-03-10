@@ -7,6 +7,7 @@
 //
 
 #import "Conn_params_ViewController.h"
+#import "Sprintron_Utility.h"
 
 @interface Conn_params_ViewController ()
 
@@ -59,35 +60,13 @@
     // Dispose of any resources that can be recreated.
 }
 
-//
-// Decodes an NSString containing hex encoded bytes into an NSData object
-//
-- (NSData *) stringToHexData:(NSString*) input
-{
-    int len = [input length] / 2;    // Target length
-    unsigned char *buf = malloc(len);
-    unsigned char *whole_byte = buf;
-    char byte_chars[3] = {'\0','\0','\0'};
-    
-    int i;
-    for (i=0; i < [input length] / 2; i++) {
-        byte_chars[0] = [input characterAtIndex:i*2];
-        byte_chars[1] = [input characterAtIndex:i*2+1];
-        *whole_byte = strtol(byte_chars, NULL, 16);
-        whole_byte++;
-    }
-    
-    NSData *data = [NSData dataWithBytes:buf length:len];
-    free( buf );
-    return data;
-}
 
 
 - (IBAction)WriteAction:(id)sender {
     
     NSString *connupdate = conn_params.text;
     
-    NSData* data = [self stringToHexData:connupdate];
+    NSData* data = [Sprintron_Utility stringToHexData:connupdate];
     
     NSLog(@"%@",data);
     [keychain connection_updateWithdata:data];

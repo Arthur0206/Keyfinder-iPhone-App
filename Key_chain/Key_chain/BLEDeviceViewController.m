@@ -182,11 +182,7 @@ UITableViewCell *connecting_cell;
     NSLog(@"Peripheral %@ connected",[peripheral.identifier UUIDString]);
     peripheral.delegate = self;
     [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID UUIDWithString:@"0xffa6"],nil ]];
-    /*Keychain *key_chain = [[Keychain alloc] init];
-    key_chain.peripheral = peripheral;
-    peripheral.delegate = key_chain;
-    [registerList addObject: key_chain];*/
- 
+
 }
 
 - (void)centralManager:(CBCentralManager *)central
@@ -197,6 +193,19 @@ UITableViewCell *connecting_cell;
     NSLog(@"Discovered %@ %@ %@", peripheral.name, peripheral.identifier, advertisementData);
     NSLog(@"Discovered %@", RSSI.stringValue);
     
+    // check if this is being discovered already.
+    for(SprintronCBPeripheral* sprintron_peripheral in Peripheral_list){
+        if (sprintron_peripheral.peripheral == peripheral){
+            return;
+        }
+    }
+    
+    // If this is in scan list, than skip it.
+    for (Keychain* key in registeredPeripherallist){
+        if ([key.configProfile.BDaddress isEqual:[advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]]) {
+            return;
+        }
+    }
     
     SprintronCBPeripheral* sprintron_peripheral = [SprintronCBPeripheral alloc];
     sprintron_peripheral.peripheral = peripheral;
@@ -223,14 +232,22 @@ UITableViewCell *connecting_cell;
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
-    NSLog(@"This service: %@  has those characteristics:\n", service.UUID);
+   
     for(CBCharacteristic* characteristic in service.characteristics)
     {
-        NSLog(@"%@ \n",characteristic.UUID.data);
+         NSLog(@"Service: %@  Characteristics: %@\n",service.UUID.data, characteristic.UUID.data);
+        [peripheral discoverDescriptorsForCharacteristic:characteristic];
     }
     
 }
 
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error{
+    
+    for(CBDescriptor* descriptor in characteristic.descriptors) {
+        NSLog(@"Characteristics: %@ descriptor:%@ \n",characteristic.UUID.data,descriptor.UUID.data);
+    }
+    
+}
 
 - (void) done_alert{
     UILocalNotification* localNotification = [[UILocalNotification alloc] init];

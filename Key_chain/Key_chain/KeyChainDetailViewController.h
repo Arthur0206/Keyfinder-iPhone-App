@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UISwitch *FindMe;
 @property (weak, nonatomic) IBOutlet MKMapView *map;
 @property (weak) NSTimer *repeatingTimer;
+@property (strong, nonatomic) UIActivityIndicatorView *actView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 - (IBAction) press_findme:(id)sender;
 - (IBAction)out_of_rang_alert_switch:(id)sender;

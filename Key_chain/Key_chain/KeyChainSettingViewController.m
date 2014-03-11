@@ -11,6 +11,7 @@
 #import "Keychain.h"
 #import "KeychainProfile.h"
 
+
 @interface KeyChainSettingViewController ()
 
 @end
@@ -120,6 +121,8 @@
         
         // Start RSSI Reading.
         [keychain set_notification];
+        
+        
         
     }
 }

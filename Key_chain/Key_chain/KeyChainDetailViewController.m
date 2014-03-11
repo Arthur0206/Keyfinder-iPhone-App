@@ -19,6 +19,7 @@
 @synthesize repeatingTimer;
 @synthesize map;
 @synthesize locationManager;
+@synthesize actView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -98,11 +99,25 @@
 
 -(IBAction) press_findme:(id)sender {
     
-    
-    [keychain find_key:1];
- 
-    [keychain find_key:0];
-
+    if(keychain.findme_status == NO){
+        
+        CABasicAnimation *pulseAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        pulseAnimation.duration = .5;
+        pulseAnimation.toValue = [NSNumber numberWithFloat:1.1];
+        pulseAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+        pulseAnimation.autoreverses = YES;
+        pulseAnimation.repeatCount = FLT_MAX;
+        [self.find_me_button.layer addAnimation:pulseAnimation forKey:@"find_me_flash"];
+        [self.find_me_button setTitle:@"Stop" forState:UIControlStateNormal] ;
+        
+        [keychain find_key:1];
+        
+    }
+    else {
+        [self.find_me_button.layer removeAnimationForKey:@"find_me_flash"];
+        [self.find_me_button setTitle:@"Find Me" forState:UIControlStateNormal] ;
+        [keychain find_key:0];
+    }
         
 }
 
@@ -121,9 +136,13 @@
         case 1:
             switch(row){
                 case 3:
+                {
+                    actView = (UIActivityIndicatorView *)[cell viewWithTag:4];
+                    [actView startAnimating];
                     self.keychain.delegate = self;
                     [self.keychain read_connectionParams];
                     break;
+                }
                 default:
                     break;
             }
@@ -135,7 +154,7 @@
 }
 
 - (void) didReadConnParams {
-    
+    [actView stopAnimating];
     [self performSegueWithIdentifier:@"detailToConnParams" sender:self];
 }
 

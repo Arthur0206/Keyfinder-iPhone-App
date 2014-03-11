@@ -87,7 +87,7 @@
 
     if (characteristic)
 	{
-        if (self.findme_status){
+        if (enable){
             unsigned char bytes = 0x1;
             NSData *data = [NSData dataWithBytes:&bytes length:1];
             [self.peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
@@ -98,7 +98,7 @@
             [self.peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
         }
     }
-    [self find_key_status];
+    
 
 }
 
@@ -121,10 +121,21 @@
 {
 
     if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc1"]]){
-        //NSLog(@"rssi:%@", characteristic.value);
+
     }
     else if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){
-        self.findme_status = characteristic.value ;
+        
+        NSLog(@"AV Alert%@", characteristic.value);
+        
+        unsigned char *status = [characteristic.value bytes];
+        
+        
+        if(status[0] == 0x01){
+            self.findme_status = YES;
+        }
+        else{
+            self.findme_status = NO;
+        }
     }
     else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
         self.conn_params = characteristic.value;
@@ -137,6 +148,9 @@
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
         //[self read_connectionParams];
+    }
+    else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){
+        [self find_key_status];
     }
 }
 
@@ -179,11 +193,18 @@
     for(CBCharacteristic* characteristic in service.characteristics)
     {
         NSLog(@"%@ \n",characteristic.UUID.data);
-        //[peripheral discoverDescriptorsForCharacteristic:characteristic];
+        [peripheral discoverDescriptorsForCharacteristic:characteristic];
     }
     
 }
 
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverDescriptorsForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error{
+    
+    for(CBDescriptor* descriptor in characteristic.descriptors) {
+        NSLog(@"descriptor:%@ \n",descriptor);
+    }
+    
+}
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
     

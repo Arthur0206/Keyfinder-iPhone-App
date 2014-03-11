@@ -38,15 +38,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    self.tableView.delegate = self;
     
+	// Do any additional setup after loading the view.
+
     self.name_label.text = keychain.configProfile.name;//@"key";//keychain.peripheral.name;
     self.out_of_range_alert_from_ui.on = keychain.configProfile.out_of_range_alert;
     self.disconnection_alert_from_ui.on = keychain.configProfile.disconnection_alert;
     self.alert_threshold_from_ui.selectedSegmentIndex = keychain.configProfile.threshold;
-    self.status_label.text = keychain.connection_state?@"CONNECTED":@"NOT CONNECTED";
     self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
-
+    self.status_label.text = [keychain connectionState];
+    
     [self startRepeatingTimer];
     
  /*   if (!locationManager){
@@ -84,16 +86,9 @@
 }
 
 - (void)targetMethod:(NSTimer*)theTimer {
-    //NSDate *startDate = [[theTimer userInfo] objectForKey:@"StartDate"];
-    //NSLog(@"Timer started on %@", startDate);
-    //    NSLog(@"Read RSSI from connected Peripheral");
-    
-    self.status_label.text = keychain.connection_state?@"CONNECTED":@"NOT CONNECTED";
-    self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
 
-    //keychain.peripheral.delegate = self;
-    //[keychain.peripheral readRSSI];
-    
+    self.status_label.text = [keychain connectionState];
+    self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
 
 }
 
@@ -109,6 +104,39 @@
     [keychain find_key:0];
 
         
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    NSUInteger section = [indexPath section];
+    NSUInteger row = [indexPath row];
+    
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    
+    switch (section)
+    {
+        case 0:
+            break;
+        case 1:
+            switch(row){
+                case 3:
+                    self.keychain.delegate = self;
+                    [self.keychain read_connectionParams];
+                    break;
+                default:
+                    break;
+            }
+            break;
+    }
+    
+    
+
+}
+
+- (void) didReadConnParams {
+    
+    [self performSegueWithIdentifier:@"detailToConnParams" sender:self];
 }
 
 - (IBAction)out_of_rang_alert_switch:(id)sender {

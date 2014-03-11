@@ -18,10 +18,15 @@
 
 
 
--(id) initWithName:(NSString*)s_name andthreshold:(NSInteger) thres andBDaddr: (NSString*)BDaddr {
+-(id) initWithName:(NSString*)s_name andthreshold:(NSInteger) thres andBDaddr: (NSData*)BDaddr
+andOutofRangeAlert:(BOOL)out_of_range_alert_on andDisconnectionAlert:(BOOL)disconnection_alert_on
+{
     self.name = s_name;
     self.threshold = thres;
     self.BDaddress = BDaddr;
+    self.out_of_range_alert = out_of_range_alert_on;
+    self.disconnection_alert = disconnection_alert_on;
+    
     return self;
 }
 

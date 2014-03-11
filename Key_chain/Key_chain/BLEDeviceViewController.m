@@ -28,6 +28,7 @@
 @synthesize repeatingTimer;
 @synthesize DeviceTableView;
 @synthesize registeredPeripherallist;
+@synthesize activityIndicator;
 
 UITableViewCell *connecting_cell;
 
@@ -52,13 +53,10 @@ UITableViewCell *connecting_cell;
     [super viewDidLoad];
     
     BLECentralManager = [BLECentralSingleton getBLECentral];
+    BLECentralManager.delegate = self;
     Peripheral_list = [BLECentralSingleton getBLEPeripheral_list];
     [Peripheral_list removeAllObjects];
-    Connected_Peripheral_list = [BLECentralSingleton getBLEConnected_peripheral_list];
     registeredPeripherallist = [BLECentralSingleton getBLERegistered_peripheral_list];
-    
-    // Start timer.
-    [self startRepeatingTimer];
     
     // Start scan.
     [BLECentralManager scanForPeripheralsWithServices:[NSArray arrayWithObject:[CBUUID UUIDWithString:@"0xffa1"]] options:nil];
@@ -150,36 +148,6 @@ UITableViewCell *connecting_cell;
 }
 
 
-/*- (void)centralManager:(CBCentralManager *)central
-  didConnectPeripheral:(CBPeripheral *)peripheral {
-    
-    NSLog(@"Peripheral %@ connected",[peripheral.identifier UUIDString]);
-    NSInteger idx;
-    
-    //NSMutableArray* registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
-    
-    [peripheral discoverServices:nil];
-    
-    
-    
-    for(SprintronCBPeripheral* sprintron_peripheral in Peripheral_list) {
-        if (sprintron_peripheral.peripheral == peripheral)
-        {
-            idx = [Peripheral_list indexOfObject:sprintron_peripheral];
-            break;
-        }
-    }
-    
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
-    
-    
-    UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *) [cell viewWithTag:4];
-    [activityIndicator stopAnimating];
-
-
-}*/
-
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Scanned list.
@@ -201,18 +169,86 @@ UITableViewCell *connecting_cell;
     [BLECentralManager connectPeripheral:sprintron_peripheral.peripheral options: options];
     NSLog(@"Start connecting");
     
+    //[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    activityIndicator = (UIActivityIndicatorView *) [cell viewWithTag:4];
+    [activityIndicator startAnimating];
     
-   /* UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *) [cell viewWithTag:4];
-    [activityIndicator startAnimating];*/
+    
+}
+
+- (void)centralManager:(CBCentralManager *)central
+ didConnectPeripheral:(CBPeripheral *)peripheral {
+ 
+    NSLog(@"Peripheral %@ connected",[peripheral.identifier UUIDString]);
+    peripheral.delegate = self;
+    [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID UUIDWithString:@"0xffa6"],nil ]];
+    /*Keychain *key_chain = [[Keychain alloc] init];
+    key_chain.peripheral = peripheral;
+    peripheral.delegate = key_chain;
+    [registerList addObject: key_chain];*/
+ 
+}
+
+- (void)centralManager:(CBCentralManager *)central
+ didDiscoverPeripheral:(CBPeripheral *)peripheral
+     advertisementData:(NSDictionary *)advertisementData
+                  RSSI:(NSNumber *)RSSI
+{
+    NSLog(@"Discovered %@ %@ %@", peripheral.name, peripheral.identifier, advertisementData);
+    NSLog(@"Discovered %@", RSSI.stringValue);
     
     
+    SprintronCBPeripheral* sprintron_peripheral = [SprintronCBPeripheral alloc];
+    sprintron_peripheral.peripheral = peripheral;
+    sprintron_peripheral.advertisementData = advertisementData;
+    [Peripheral_list addObject:sprintron_peripheral];
+ 
+    [self.tableView reloadData];
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
+{
+    NSLog(@"%@ has services:\n",peripheral.name);
+    for(CBService * service in peripheral.services) {
+        
+        NSLog(@"%@ \n",service.UUID);
+        peripheral.delegate = self;;
+        [peripheral discoverCharacteristics:nil forService:service];
+    }
+    
+    [activityIndicator stopAnimating];
+    [self performSegueWithIdentifier:@"BLEScanToSetting" sender:self];
+    
+}
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
+{
+    NSLog(@"This service: %@  has those characteristics:\n", service.UUID);
+    for(CBCharacteristic* characteristic in service.characteristics)
+    {
+        NSLog(@"%@ \n",characteristic.UUID.data);
+    }
+    
+}
+
+
+- (void) done_alert{
+    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+    
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:0.4];
+    localNotification.alertAction = NSLocalizedString(@"View Details", nil);
+    localNotification.alertBody = [NSString stringWithFormat:@"Connection Successful"];
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    	
+    [[UIApplication sharedApplication] 	presentLocalNotificationNow:localNotification];
 }
 
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     
-    if ([[segue identifier] isEqualToString:@"scan_to_setting"]) {
+    if ([[segue identifier] isEqualToString:@"BLEScanToSetting"]) {
         NSIndexPath *selectedRowIndex = [self.tableView indexPathForSelectedRow];
         KeyChainSettingViewController *settingViewController = [segue destinationViewController];
         settingViewController.sprintron_peripheral = [Peripheral_list objectAtIndex:selectedRowIndex.row];
@@ -220,7 +256,6 @@ UITableViewCell *connecting_cell;
         [self.tableView deselectRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRowIndex.row inSection:0] animated:false];
 
     }
-    
     
 }
 

@@ -10,6 +10,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import <CoreBluetooth/CBPeripheral.h>
 
+
 #import "KeychainProfile.h"
 
 #define RED_ALERT 1
@@ -23,26 +24,36 @@
 #define MID_THRESHOLD -85
 #define LOW_THRESHOLD -75
 
+
+@protocol KeychainDelegate <NSObject>
+
+@optional
+- (void) didReadConnParams;
+
+@end
+
 @interface Keychain : NSObject <CBPeripheralDelegate>
-
-
+{
+    id <KeychainDelegate> delegate;
+}
+@property (strong) id delegate;
 
 @property (nonatomic,strong)CBPeripheral *peripheral;
-@property (nonatomic, strong)KeychainProfile *configProfile;
+@property (nonatomic,strong)KeychainProfile *configProfile;
 @property NSArray*  threshold_detail;
-@property NSInteger connection_state;
 @property NSInteger range_state;
 @property BOOL findme_status;
 @property NSData* conn_params;
 
 
 - (id) init;
-- (id) initWithKeyProfile:(KeychainProfile*) key_profile;
+- (id) initWithKeyProfile:(KeychainProfile*) key_profile andPeripheral:(CBPeripheral*) newperipheral;
 - (void) alert:(NSString*)msg;
 - (void) find_key:(NSInteger)enable;
 - (void) find_key_status;
 - (void) set_notification;
 - (void) connection_updateWithdata:(NSData*)data;
 - (void) read_connectionParams;
+- (NSString*) connectionState;
 
 @end

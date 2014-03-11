@@ -10,7 +10,7 @@
 #import <MapKit/MapKit.h>
 #import "Keychain.h"
 
-@interface KeyChainDetailViewController : UITableViewController <CLLocationManagerDelegate>
+@interface KeyChainDetailViewController : UITableViewController <CLLocationManagerDelegate,UITableViewDelegate,KeychainDelegate>
 @property(strong,nonatomic) Keychain *keychain;
 @property (weak, nonatomic) IBOutlet UISwitch *FindMe;
 @property (weak, nonatomic) IBOutlet MKMapView *map;

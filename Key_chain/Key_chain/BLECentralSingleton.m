@@ -54,10 +54,14 @@ static NSMutableArray* registered_peripheral_list;
     
 }
 
-+ (void)setBLERegistered_peripheral_list:(NSMutableArray*) list {
-    
-    registered_peripheral_list = list;
-    
++ (BOOL)addObjectToBLERegistered_peripheral_list:(id)object {
+    if (registered_peripheral_list == nil){
+        return NO;
+    }
+    else {
+        [registered_peripheral_list addObject:object];
+        return YES;
+    }
 }
 
 

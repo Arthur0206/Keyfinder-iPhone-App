@@ -15,6 +15,6 @@
 + (id)getBLEPeripheral_list;
 + (id)getBLEConnected_peripheral_list;
 + (id)getBLERegistered_peripheral_list;
-+ (void)setBLERegistered_peripheral_list:(NSMutableArray*) list ;
++ (BOOL)addObjectToBLERegistered_peripheral_list:(id)object;
 
 @end

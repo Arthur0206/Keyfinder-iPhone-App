@@ -100,23 +100,27 @@
 {
     
     if ([[segue identifier] isEqualToString:@"KeyChainSettingDone"]) {
-        // get the name from input.
+        
+        // get all the infos from UI input.
         NSString* name = name_input_from_ui.text;
         NSInteger threshold = self.threshold_setting_from_ui.selectedSegmentIndex;
+        NSData* bd_addr = [self.sprintron_peripheral.advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey];
+        BOOL out_of_range_alert_on = self.out_of_range_alert_setting_from_ui.on;
+        BOOL disconnection_alert_on = self.disconnection_alert_setting_from_ui.on;
+
         
-        KeychainProfile *key_profile = [[KeychainProfile alloc] initWithName:name andthreshold: threshold andBDaddr:[self.sprintron_peripheral.advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]];
-        for(Keychain* key_chain in [BLECentralSingleton getBLERegistered_peripheral_list]){
-            if (key_chain.peripheral == sprintron_peripheral.peripheral){
-                key_chain.configProfile = key_profile;
-                //key_chain.connection_state = CONNECTED;
-                key_chain.configProfile.out_of_range_alert = self.out_of_range_alert_setting_from_ui.on;
-                key_chain.configProfile.threshold = self.threshold_setting_from_ui.selectedSegmentIndex;
-                key_chain.configProfile.disconnection_alert = self.disconnection_alert_setting_from_ui.on;
-                [key_chain set_notification];
-                [key_chain read_connectionParams];
-                break;
-            }
-        }
+        // Create config progile for key chain
+        KeychainProfile *profile = [[KeychainProfile alloc] initWithName:name andthreshold:threshold andBDaddr:bd_addr andOutofRangeAlert:out_of_range_alert_on andDisconnectionAlert:disconnection_alert_on];
+        
+        // Create key chain instance
+        Keychain *keychain = [[Keychain alloc] initWithKeyProfile:profile andPeripheral:sprintron_peripheral.peripheral];
+        
+        // Add new key chain to list.
+        [BLECentralSingleton addObjectToBLERegistered_peripheral_list:keychain];
+        
+        // Start RSSI Reading.
+        [keychain set_notification];
+        
     }
 }
 

@@ -16,29 +16,30 @@
 
 @end
 
+
 @implementation Keychain
 
 @synthesize threshold_detail;
 @synthesize peripheral;
-@synthesize connection_state;
 @synthesize range_state;
 @synthesize configProfile;
 @synthesize findme_status;
 @synthesize conn_params;
+@synthesize delegate;
 
 - (id) init {
     //self.threshold = DEFAULT_THRESHOLD;
-    self.connection_state = NOT_CONNECTED;
     self.range_state = NO_ALERT;
     self.findme_status = false;
     self.threshold_detail = [NSArray arrayWithObjects:[NSNumber numberWithInt:HIGH_THRESHOLD],[NSNumber numberWithInt:MID_THRESHOLD],[NSNumber numberWithInt:LOW_THRESHOLD],nil];
     return self;
 }
 
-- (id) initWithKeyProfile:(KeychainProfile *)key_profile {
+- (id) initWithKeyProfile:(KeychainProfile*) key_profile andPeripheral:(CBPeripheral*) newperipheral {
     
     self = [self init];
     self.configProfile = key_profile;
+    self.peripheral = newperipheral;
     return self;
 }
 
@@ -74,6 +75,7 @@
 - (void) set_notification {
     CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa1" andCharacteristicUUID:@"0xffc1"];
     if (characteristic){
+        self.peripheral.delegate = self;
         [self.peripheral setNotifyValue:YES forCharacteristic:characteristic];
     }
 }
@@ -129,29 +131,18 @@
         NSLog(@"didUpdateValue:%@\n",characteristic.UUID.data);
         NSLog(@"Value:%@\n",characteristic.value);
         conn_params = characteristic.value;
+        [[self delegate] didReadConnParams];
     }
 }
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
-        [self read_connectionParams];
+        //[self read_connectionParams];
     }
 }
 
 - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error
 {
-        /*(for(Keychain* keychain in registerList){
-     if (keychain.connection_state == CONNECTED){
-     if( [keychain.peripheral.RSSI intValue] < keychain.threshold && keychain.range_state < RED_ALERT) {
-     [keychain alert:@"out of range"];
-     keychain.range_state = RED_ALERT;
-     }
-     else if( keychain.range_state == RED_ALERT && [keychain.peripheral.RSSI intValue] > keychain.threshold+10)
-     {
-     keychain.range_state = NO_ALERT;
-     }
-     }
-     }*/
-    
+
     NSLog(@"RSSI:%d",[peripheral.RSSI intValue]);
     if(configProfile.out_of_range_alert){
         
@@ -228,7 +219,19 @@
     }
 }
 
-
+- (NSString*) connectionState {
+    if(self.peripheral){
+        switch (self.peripheral.state) {
+            case CBPeripheralStateConnected:
+                return @"Connected";
+            case CBPeripheralStateConnecting:
+                return @"Connecting";
+            default:
+                return @"Not Connected";
+        }
+    }
+    return @"Not Connected";
+}
 
 
 @end

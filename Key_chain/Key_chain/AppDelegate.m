@@ -21,7 +21,7 @@
     NSMutableArray* key_profile_list = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSMutableArray* registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
     for (KeychainProfile* key_profile in  key_profile_list) {
-        [registerList addObject:[[Keychain alloc] initWithKeyProfile:key_profile]];
+        [registerList addObject:[[Keychain alloc] initWithKeyProfile:key_profile andPeripheral:nil] ];
     }
     
     return YES;

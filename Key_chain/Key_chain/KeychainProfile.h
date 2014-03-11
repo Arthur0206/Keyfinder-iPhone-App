@@ -18,6 +18,7 @@
 @property BOOL disconnection_alert;
 @property CLLocation* location;
 
--(id) initWithName:(NSString*)s_name andthreshold:(NSInteger) thres andBDaddr: (NSString*)BDaddr;
+-(id) initWithName:(NSString*)s_name andthreshold:(NSInteger) thres andBDaddr: (NSData*)BDaddr
+andOutofRangeAlert:(BOOL)out_of_range_alert_on andDisconnectionAlert:(BOOL)disconnection_alert_on;
 
 @end

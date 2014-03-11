@@ -44,6 +44,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
+    BLECentralManager = [BLECentralSingleton getBLECentral];
+    BLECentralManager.delegate = self;
+    Peripheral_list = [BLECentralSingleton getBLEPeripheral_list];
+    registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
     [self.tableView reloadData]; // to reload selected cell
 
     
@@ -52,20 +56,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Init all the lists.
-    BLECentralManager = [BLECentralSingleton getBLECentral];
-    BLECentralManager.delegate = self;
-    Peripheral_list = [BLECentralSingleton getBLEPeripheral_list];
-    registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
-    
     self.tableView.delegate = self;
-    
-    // Do any additional setup after loading the view.
-    //[self startRepeatingTimer];
-    
-
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -111,13 +102,14 @@
     //    NSLog(@"Timer started on %@", startDate);
     //    NSLog(@"Read RSSI from connected Peripheral");
     
-    for(Keychain* key in registerList){
-        if(key.connection_state == CONNECTED){
+    /*for(Keychain* key in registerList){
+        
+        if(key.peripheral. == CONNECTED){
             key.peripheral.delegate = key;
             [key.peripheral readRSSI];
         }
         
-    }
+    }*/
 
     
 }
@@ -269,7 +261,6 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
     
     for(Keychain* key in registerList) {
         if (key.peripheral == peripheral){
-            key.connection_state = NOT_CONNECTED;
             if(key.configProfile.disconnection_alert){
                 [key alert:@"Disconnected"];
             }

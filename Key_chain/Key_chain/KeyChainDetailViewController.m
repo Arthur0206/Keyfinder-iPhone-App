@@ -111,12 +111,14 @@
         [self.find_me_button setTitle:@"Stop" forState:UIControlStateNormal] ;
         
         [keychain find_key:1];
+        keychain.findme_status = YES;
         
     }
     else {
         [self.find_me_button.layer removeAnimationForKey:@"find_me_flash"];
         [self.find_me_button setTitle:@"Find Me" forState:UIControlStateNormal] ;
         [keychain find_key:0];
+        keychain.findme_status = NO;
     }
         
 }

@@ -18,6 +18,10 @@
 
 
 @implementation Keychain
+{
+    NSArray* rssi_entry;
+}
+
 
 @synthesize threshold_detail;
 @synthesize peripheral;
@@ -27,11 +31,17 @@
 @synthesize conn_params;
 @synthesize delegate;
 
+
+
+
 - (id) init {
     //self.threshold = DEFAULT_THRESHOLD;
     self.range_state = NO_ALERT;
     self.findme_status = false;
     self.threshold_detail = [NSArray arrayWithObjects:[NSNumber numberWithInt:HIGH_THRESHOLD],[NSNumber numberWithInt:MID_THRESHOLD],[NSNumber numberWithInt:LOW_THRESHOLD],nil];
+    
+    NSNumber *super_small = [NSNumber numberWithInt:SUPER_SMALL];
+    rssi_entry = [NSArray arrayWithObjects:super_small, super_small, super_small, nil];
     return self;
 }
 
@@ -121,7 +131,8 @@
 {
 
     if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc1"]]){
-
+        NSLog(@"REMOTE RSSI update:%@",characteristic.value);
+        [self.peripheral readRSSI];
     }
     else if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){
         
@@ -156,8 +167,10 @@
 
 - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error
 {
-
+    static NSInteger rssi_array_index = 0;
+    
     NSLog(@"RSSI:%d",[peripheral.RSSI intValue]);
+    
     if(configProfile.out_of_range_alert){
         
         NSInteger threshold_int = [[threshold_detail objectAtIndex:configProfile.threshold] intValue];
@@ -208,13 +221,17 @@
     
     for(CBDescriptor* descriptor in characteristic.descriptors) {
         NSLog(@"descriptor:%@ \n",descriptor);
+        [peripheral readValueForDescriptor:descriptor];
     }
     
 }
 
+
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
     
     NSLog(@"update descriptor");
+    NSLog(@"descriptor:%@  value:%@",descriptor, descriptor.value);
+
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
@@ -223,10 +240,9 @@
     // RSSI periodic update
     
     //CBCharacteristic *rssi_update_characteristic = [self findCharacteristicWithServiceUUID:@"0xffa1" andCharacteristicUUID:@"0xffc1"];
-    //NSLog(@"RSSI UPDATE");
-//    NSLog(@"RSSI update:%@",characteristic.value);
-    [self.peripheral readRSSI];
-    [self set_notification];
+    NSLog(@"Updated Nofitication state");
+    
+    //[self set_notification];
     
 }
 - (void) connection_updateWithdata:(NSData*)data{

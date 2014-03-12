@@ -246,9 +246,21 @@ UITableViewCell *connecting_cell;
     
     for(CBDescriptor* descriptor in characteristic.descriptors) {
         NSLog(@"Characteristics: %@ descriptor:%@ \n",characteristic.UUID.data,descriptor.UUID.data);
+        [peripheral readValueForDescriptor:descriptor];
     }
     
 }
+
+
+
+- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForDescriptor:(CBDescriptor *)descriptor error:(NSError *)error {
+    
+    NSLog(@"update descriptor");
+    NSLog(@"descriptor:%@  value:%@",descriptor.UUID.data, descriptor.value);
+    
+}
+
+
 
 - (void) done_alert{
     UILocalNotification* localNotification = [[UILocalNotification alloc] init];

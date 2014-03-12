@@ -24,6 +24,7 @@
 #define MID_THRESHOLD -85
 #define LOW_THRESHOLD -75
 
+#define SUPER_SMALL  -10000
 
 @protocol KeychainDelegate <NSObject>
 

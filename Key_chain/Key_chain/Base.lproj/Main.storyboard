@@ -8,7 +8,7 @@
         <scene sceneID="X9M-cq-ikW">
             <objects>
                 <tableViewController id="ll7-wS-I2n" customClass="KeyChainViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="uSr-Qo-08K">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="uSr-Qo-08K">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -43,12 +43,25 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="KeyChain List" id="ro0-5H-Guz">
-                        <barButtonItem key="rightBarButtonItem" title="Scan" style="plain" id="PQI-NO-Pmr">
+                        <barButtonItem key="leftBarButtonItem" title="Edit" style="plain" id="g8m-2J-kvn">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JKf-Tk-e5O">
+                                <rect key="frame" x="16" y="5" width="71" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <state key="normal" title="Edit">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="Enter_edit_mode:" destination="ll7-wS-I2n" eventType="touchUpInside" id="Kgk-nw-nUZ"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Add" style="plain" id="PQI-NO-Pmr">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="mTA-iw-RTa">
                                 <rect key="frame" x="233" y="5" width="71" height="33"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal" title="Scan">
+                                <state key="normal" title="Add">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -57,6 +70,9 @@
                             </button>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="Edit_Button" destination="JKf-Tk-e5O" id="4hD-Im-Fny"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O3c-Fz-otx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -562,7 +578,7 @@
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="G07-uU-qlj">
                             <color key="tintColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="ll7-wS-I2n" kind="push" identifier="KeyChainSettingDone" id="1dJ-pY-fho"/>
+                                <segue destination="ll7-wS-I2n" kind="push" identifier="KeyChainSettingDone" id="BRD-2b-Ve8"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -587,6 +603,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="1dJ-pY-fho"/>
+        <segue reference="BRD-2b-Ve8"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -21,9 +21,11 @@
 @property(nonatomic,strong) NSTimer* repeatingTimer;
 @property (weak, nonatomic) IBOutlet UIButton *Edit_Button;
 
-//@property (weak, nonatomic) IBOutlet UIBarButtonItem *EditMode;
+- (IBAction)Enter_edit_mode:(id)sender;
 
-- (IBAction)enterEditMode:(id)sender;
+
+
+
 
 
 

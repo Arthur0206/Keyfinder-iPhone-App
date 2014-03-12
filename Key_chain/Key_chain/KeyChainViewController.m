@@ -43,6 +43,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.navigationItem.hidesBackButton = YES;
     registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
     BLECentralManager = [BLECentralSingleton getBLECentral];
     BLECentralManager.delegate = self;
@@ -167,14 +168,16 @@
     
     if (editingStyle == UITableViewCellEditingStyleDelete){
         Keychain* key = [registerList objectAtIndex:indexPath.row];
-        [BLECentralManager cancelPeripheralConnection:key.peripheral];
+        if(key.peripheral){
+            [BLECentralManager cancelPeripheralConnection:key.peripheral];
+        }
         [registerList removeObjectAtIndex:indexPath.row];
-        //  [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationTop];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView reloadData];
     }
 }
 
-- (IBAction)enterEditMode:(id)sender {
+- (IBAction)Enter_edit_mode:(id)sender {
     static int flag = 0;
     if(!flag) {
        [self.tableView setEditing:YES animated:YES];
@@ -298,11 +301,6 @@ didRetrieveConnectedPeripherals:(NSArray *)peripherals {
             break;
     }
 }
-
-
-
-
-
 
 
 @end

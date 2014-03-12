@@ -120,7 +120,7 @@
         [BLECentralSingleton addObjectToBLERegistered_peripheral_list:keychain];
         
         // Start RSSI Reading.
-        [keychain set_notification];
+        //[keychain set_notification];
         
         
         

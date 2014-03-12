@@ -51,6 +51,7 @@
     [self.tableView reloadData]; // to reload selected cell
 
     // Start scan.
+    [BLECentralManager stopScan];
     [BLECentralManager scanForPeripheralsWithServices:[NSArray arrayWithObject:[CBUUID UUIDWithString:@"0xffa1"]] options:nil];
 }
 
@@ -162,8 +163,15 @@
 
      
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-     [registerList removeObjectAtIndex:indexPath.row];
-    [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationTop];
+    
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete){
+        Keychain* key = [registerList objectAtIndex:indexPath.row];
+        [BLECentralManager cancelPeripheralConnection:key.peripheral];
+        [registerList removeObjectAtIndex:indexPath.row];
+        //  [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationTop];
+        [self.tableView reloadData];
+    }
 }
 
 - (IBAction)enterEditMode:(id)sender {
@@ -178,35 +186,6 @@
         [self.Edit_Button setTitle:@"Edit" forState:UIControlStateNormal];
         flag = 0;
     }
-}
-
-
-- (void) startNotifyingForServiceUUID:(NSString *) serviceUUID andCharacteristicUUID:(NSString *) charUUID Peripheral:(CBPeripheral*) peripheral
-{
-	CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:serviceUUID andCharacteristicUUID:charUUID Peripheral:peripheral];
-	if (characteristic)
-	{
-		[peripheral setNotifyValue:YES forCharacteristic:characteristic];
-	}
-}
-
-- (CBCharacteristic *) findCharacteristicWithServiceUUID:(NSString *) serviceUUID andCharacteristicUUID:(NSString *) charUUID Peripheral:(CBPeripheral*) peripheral
-{
-    for (CBService *service in [peripheral services])
-	{
-        if ([[service UUID] isEqual:[CBUUID UUIDWithString:serviceUUID]] )
-		{
-            for (CBCharacteristic *characteristic in [service characteristics])
-			{
-                if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:charUUID]] )
-				{
-					return characteristic;
-                }
-            }
-        }
-    }
-    
-	return nil;
 }
 
 

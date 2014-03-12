@@ -193,6 +193,12 @@
     for(CBCharacteristic* characteristic in service.characteristics)
     {
         NSLog(@"%@ \n",characteristic.UUID.data);
+        
+        if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc1"]]) {
+            NSLog(@"Set RSSI update indication");
+            [self set_notification];
+        }
+        
         [peripheral discoverDescriptorsForCharacteristic:characteristic];
     }
     
@@ -220,7 +226,7 @@
     //NSLog(@"RSSI UPDATE");
 //    NSLog(@"RSSI update:%@",characteristic.value);
     [self.peripheral readRSSI];
-    [self set_notification];
+   [self set_notification];
     
 }
 - (void) connection_updateWithdata:(NSData*)data{

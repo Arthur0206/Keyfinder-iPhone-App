@@ -59,6 +59,7 @@ UITableViewCell *connecting_cell;
     registeredPeripherallist = [BLECentralSingleton getBLERegistered_peripheral_list];
     
     // Start scan.
+    [BLECentralManager stopScan];
     [BLECentralManager scanForPeripheralsWithServices:[NSArray arrayWithObject:[CBUUID UUIDWithString:@"0xffa1"]] options:nil];
  
 

@@ -226,7 +226,7 @@
     //NSLog(@"RSSI UPDATE");
 //    NSLog(@"RSSI update:%@",characteristic.value);
     [self.peripheral readRSSI];
-   [self set_notification];
+    [self set_notification];
     
 }
 - (void) connection_updateWithdata:(NSData*)data{

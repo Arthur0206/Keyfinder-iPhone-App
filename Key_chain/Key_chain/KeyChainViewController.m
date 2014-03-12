@@ -50,7 +50,8 @@
     registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
     [self.tableView reloadData]; // to reload selected cell
 
-    
+    // Start scan.
+    [BLECentralManager scanForPeripheralsWithServices:[NSArray arrayWithObject:[CBUUID UUIDWithString:@"0xffa1"]] options:nil];
 }
 
 - (void)viewDidLoad
@@ -99,19 +100,7 @@
 
 - (void)targetMethod:(NSTimer*)theTimer {
     NSDate *startDate = [[theTimer userInfo] objectForKey:@"StartDate"];
-    //    NSLog(@"Timer started on %@", startDate);
-    //    NSLog(@"Read RSSI from connected Peripheral");
-    
-    /*for(Keychain* key in registerList){
-        
-        if(key.peripheral. == CONNECTED){
-            key.peripheral.delegate = key;
-            [key.peripheral readRSSI];
-        }
-        
-    }*/
 
-    
 }
 
 - (void)invocationMethod:(NSDate *)date {
@@ -145,14 +134,14 @@
     
     Keychain *keychain = [registerList objectAtIndex:indexPath.row];
     
+    cell.textLabel.text = keychain.configProfile.name;
+    cell.detailTextLabel.text = [keychain connectionState];
     
-    
-    UILabel *label;
+    /*UILabel *label;
     
     label = (UILabel *)[cell viewWithTag:1];
     
-   
-    label.text = keychain.configProfile.name;
+    label.text = keychain.configProfile.name;*/
   
     
     return cell;
@@ -226,30 +215,14 @@
     
     NSLog(@"Peripheral %@ connected",[peripheral.identifier UUIDString]);
     
-
-    //[self startNotifyingForServiceUUID:@"0xFFF1" andCharacteristicUUID:@"0xFFF2" Peripheral:peripheral];
-    
-    /*for(SprintronCBPeripheral* sprintron_peripheral in Peripheral_list){
-        if(sprintron_peripheral.peripheral.identifier == peripheral.identifier){
-            [Peripheral_list removeObject:sprintron_peripheral];
-            break;
-        }
-    }*/
- /*
-    for(Keychain* key in registerList){
+    for(Keychain* key in registerList) {
         if (key.peripheral == peripheral){
-            key.connection_state = CONNECTED;
             key.peripheral.delegate = key;
-            [peripheral discoverServices:nil];
+            [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID  UUIDWithString:@"0xffa6"],nil ]];
+            [self.tableView reloadData];
             break;
         }
-    }*/
-    
-    Keychain *key_chain = [[Keychain alloc] init];
-    key_chain.peripheral = peripheral;
-    peripheral.delegate = key_chain;
-    [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID UUIDWithString:@"0xffa6"],nil ]];
-    [registerList addObject: key_chain];
+    }
     
 }
 
@@ -269,6 +242,7 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
                                       CBConnectPeripheralOptionNotifyOnNotificationKey: @YES};
             
             [BLECentralManager connectPeripheral:peripheral options: options];
+            [self.tableView reloadData];
             break;
 
         }
@@ -282,46 +256,19 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
      advertisementData:(NSDictionary *)advertisementData
                   RSSI:(NSNumber *)RSSI
 {
-    // NSLog(@"Discovered %@ %@ %@", peripheral.name, peripheral.identifier, advertisementData);
-    NSLog(@"Discovered %@", RSSI.stringValue);
+    NSLog(@"Discovered %@ %@ %@", peripheral.name, peripheral.identifier, advertisementData);
     
-    bool exist_in_list = false;
-    
-
-    
-    //NSLog(@"%@",[advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]);
-    
-    
-    for(SprintronCBPeripheral* tmp in Peripheral_list) {
-        if (tmp.peripheral.identifier == peripheral.identifier) {
-            exist_in_list = true;
+    for(Keychain* key in registerList){
+        if ([key.configProfile.BDaddress isEqual:[advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]]){
+            NSDictionary* options = @{CBConnectPeripheralOptionNotifyOnConnectionKey: @YES,
+                                      CBConnectPeripheralOptionNotifyOnDisconnectionKey: @YES,
+                                      CBConnectPeripheralOptionNotifyOnNotificationKey: @YES};
+            key.peripheral = peripheral;
+            [BLECentralManager connectPeripheral:peripheral options:options];
             break;
         }
     }
     
-    if(!exist_in_list) {
-        SprintronCBPeripheral* sprintron_peripheral = [SprintronCBPeripheral alloc];
-        sprintron_peripheral.peripheral = peripheral;
-        sprintron_peripheral.advertisementData = advertisementData;
-        [Peripheral_list addObject:sprintron_peripheral];
-    }
-    
-/*    for(Keychain* keychain in registerList){
-        if(!keychain.connection_state && [keychain.configProfile.BDaddress isEqualToData:[advertisementData objectForKey:CBAdvertisementDataManufacturerDataKey]]){
-
-            // make connection.
-            //sprintron_peripheral.peripheral.delegate = self;
-            // TODO: modulize this part.
-            NSDictionary* options = @{CBConnectPeripheralOptionNotifyOnConnectionKey: @YES,
-                                      CBConnectPeripheralOptionNotifyOnDisconnectionKey: @YES,
-                                      CBConnectPeripheralOptionNotifyOnNotificationKey: @YES};
-            
-            [BLECentralManager cancelPeripheralConnection:peripheral];
-            [BLECentralManager connectPeripheral:peripheral options: options];
-            NSLog(@"Start connecting");
-
-        }
-    }*/
 }
 
 

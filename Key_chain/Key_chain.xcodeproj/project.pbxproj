@@ -164,11 +164,11 @@
 				36F9A9C218B9CE8A00DFFCEA /* KeychainProfile.m */,
 				36C3419818CC7E9B0022BD0A /* Conn_params_ViewController.h */,
 				36C3419918CC7E9B0022BD0A /* Conn_params_ViewController.m */,
+				36FFBAE618CD02A9009501A5 /* Sprintron_Utility.h */,
+				36FFBAE718CD02A9009501A5 /* Sprintron_Utility.m */,
 				36A5A55D187D2AB40011D16E /* Main.storyboard */,
 				36A5A566187D2AB40011D16E /* Images.xcassets */,
 				36A5A552187D2AB40011D16E /* Supporting Files */,
-				36FFBAE618CD02A9009501A5 /* Sprintron_Utility.h */,
-				36FFBAE718CD02A9009501A5 /* Sprintron_Utility.m */,
 			);
 			path = Key_chain;
 			sourceTree = "<group>";

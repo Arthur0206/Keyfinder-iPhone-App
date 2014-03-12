@@ -66,11 +66,6 @@
         //key_config = key.configProfile;
     }
     
-    /*NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,   NSUserDomainMask, YES);
-    NSString *documentPath = ([documentPaths count] > 0) ? [documentPaths objectAtIndex:0] : nil;
-    NSString *documentsResourcesPath = [documentPath  stringByAppendingPathComponent:@"MyAppCache"];
-    NSString *fullPath = [documentsResourcesPath stringByAppendingPathComponent:@"archive.data"];
-    BOOL isArch = [NSKeyedArchiver archiveRootObject:key_chain_config_profile toFile:fullPath];*/
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:key_chain_config_profile];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"key_profile"];
     

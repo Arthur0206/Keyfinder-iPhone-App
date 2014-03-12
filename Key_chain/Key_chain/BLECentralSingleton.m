@@ -65,5 +65,4 @@ static NSMutableArray* registered_peripheral_list;
 }
 
 
-
 @end

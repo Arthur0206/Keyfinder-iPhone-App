@@ -47,7 +47,7 @@
     self.out_of_range_alert_from_ui.on = keychain.configProfile.out_of_range_alert;
     self.disconnection_alert_from_ui.on = keychain.configProfile.disconnection_alert;
     self.alert_threshold_from_ui.selectedSegmentIndex = keychain.configProfile.threshold;
-    self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
+    self.rssi_label.text = [keychain.rssi stringValue];
     self.key_rssi_label.text = [keychain.key_rssi_value stringValue];
     self.status_label.text = [keychain connectionState];
     
@@ -75,7 +75,7 @@
     // Cancel a preexisting timer.
     [self.repeatingTimer invalidate];
     
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.1
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                       target:self selector:@selector(targetMethod:)
                                                     userInfo:[self userInfo] repeats:YES];
     self.repeatingTimer = timer;
@@ -90,8 +90,9 @@
 - (void)targetMethod:(NSTimer*)theTimer {
 
     self.status_label.text = [keychain connectionState];
-    self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
+    self.rssi_label.text = [keychain.rssi stringValue];
     self.key_rssi_label.text = [keychain.key_rssi_value stringValue];
+    self.filtered_rssi_label.text = [keychain.calculated_range_indicator_rssi stringValue];
 
 }
 

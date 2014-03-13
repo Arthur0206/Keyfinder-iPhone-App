@@ -14,4 +14,6 @@
 + (NSData *) stringToHexData:(NSString*) input;
 
 + (NSNumber *) NSDataToNSNumber:(NSData*) input;
+
++ (NSNumber *) sprintron_MaxNSNumber:(NSMutableArray*) array;
 @end

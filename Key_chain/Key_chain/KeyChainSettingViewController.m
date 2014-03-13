@@ -10,7 +10,7 @@
 #import "BLECentralSingleton.h"
 #import "Keychain.h"
 #import "KeychainProfile.h"
-
+#import "Sprintron_Utility.h"
 
 @interface KeyChainSettingViewController ()
 
@@ -122,7 +122,11 @@
         // Start RSSI Reading.
         [keychain set_notification];
         
+        // Read remote TX Power.
+        [keychain read_remote_TX_power];
         
+        // Connection update to 1s interval.
+        [keychain connection_updateWithdata:[Sprintron_Utility stringToHexData:@"2003f40100002000c800"]];
         
     }
 }

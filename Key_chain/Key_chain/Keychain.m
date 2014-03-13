@@ -20,7 +20,8 @@
 
 @implementation Keychain
 {
-    NSArray* rssi_entry;
+    NSMutableArray* rssi_entry;
+    NSMutableArray* slave_rssi_entry;
 }
 
 
@@ -31,7 +32,9 @@
 @synthesize findme_status;
 @synthesize conn_params;
 @synthesize delegate;
-
+@synthesize key_rssi_value;
+@synthesize rssi;
+@synthesize key_chain_TX_power;
 
 
 
@@ -42,7 +45,8 @@
     self.threshold_detail = [NSArray arrayWithObjects:[NSNumber numberWithInt:HIGH_THRESHOLD],[NSNumber numberWithInt:MID_THRESHOLD],[NSNumber numberWithInt:LOW_THRESHOLD],nil];
     
     NSNumber *super_small = [NSNumber numberWithInt:SUPER_SMALL];
-    rssi_entry = [NSArray arrayWithObjects:super_small, super_small, super_small, nil];
+    rssi_entry = [NSMutableArray arrayWithObjects:super_small, super_small, super_small, nil];
+    slave_rssi_entry = [NSMutableArray arrayWithObjects:super_small, super_small, super_small, nil];
     return self;
 }
 
@@ -91,6 +95,14 @@
     }
 }
 
+-(void) read_remote_TX_power {
+    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0x1804" andCharacteristicUUID:@"0x2a07"];
+    if (characteristic){
+        self.peripheral.delegate = self;
+        [self.peripheral readValueForCharacteristic:characteristic];
+    }
+}
+
 - (void) find_key:(NSInteger)enable{
     
     	
@@ -134,7 +146,9 @@
     if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc1"]]){
         NSLog(@"REMOTE RSSI update:%@",characteristic.value);
         self.key_rssi_value = [Sprintron_Utility NSDataToNSNumber:characteristic.value];
-        [self.peripheral readRSSI];
+        [self key_rssi_window_proceed_with_newRSSI:self.key_rssi_value];
+        peripheral.delegate = self;
+        [peripheral readRSSI];
     }
     else if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){
         
@@ -157,6 +171,11 @@
         conn_params = characteristic.value;
         [[self delegate] didReadConnParams];
     }
+    else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0x2a07"]]){
+        NSLog(@"TX_POWER = %@ dbm",characteristic.value);
+        self.key_chain_TX_power = [Sprintron_Utility NSDataToNSNumber:characteristic.value];
+    }
+
 }
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
     if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
@@ -167,25 +186,88 @@
     }
 }
 
+- (void) rssi_window_proceed_with_newRSSI:(NSNumber*)new_rssi {
+    static NSInteger rssi_array_index = 0 ;
+    
+    // RSSI_m = rawRSSI_m – TxPwr_s
+    NSNumber* master_cal_rssi = [NSNumber numberWithInteger:[new_rssi integerValue] - Key_TX_POWER];
+    
+    [rssi_entry replaceObjectAtIndex:rssi_array_index withObject:master_cal_rssi];
+    
+    rssi_array_index++;
+    if(rssi_array_index > 2){
+        rssi_array_index = 0;
+    }
+    
+    //return [Sprintron_Utility sprintron_MaxNSNumber:rssi_entry];
+    
+}
+
+- (void) key_rssi_window_proceed_with_newRSSI:(NSNumber*)new_rssi {
+    static NSInteger slave_rssi_array_index = 0 ;
+    
+    // RSSI_m = rawRSSI_s – TxPwr_m
+    NSNumber* slave_cal_rssi = [NSNumber numberWithInteger:[new_rssi integerValue] - IPHONE_TX_POWER];
+    self.key_rssi_value = slave_cal_rssi;
+    [slave_rssi_entry replaceObjectAtIndex:slave_rssi_array_index withObject:slave_cal_rssi];
+    
+    slave_rssi_array_index++;
+    if(slave_rssi_array_index > 2){
+        slave_rssi_array_index = 0;
+    }
+    
+    //return [Sprintron_Utility sprintron_MaxNSNumber:rssi_entry];
+    
+}
+
+- (NSNumber*) cal_rssi{
+    /*
+    At any given time, we will take the max of the past 3 RSSI values:
+    maxRSSI_m (k) = MAX( RSSI_m(k),  RSSI_m(k-1),  RSSI_m(k-2) );
+    maxRSSI_s (k) = MAX( RSSI_s(k),  RSSI_s(k-1),  RSSI_s(k-2) );
+    
+    and the RSSI to use is:
+    RSSI_max (k) = MAX(maxRSSI_m(k), maxRSSI_s(k))
+    */
+    
+    NSNumber* m_range_rssi = [Sprintron_Utility sprintron_MaxNSNumber:rssi_entry];
+    NSNumber* s_range_rssi = [Sprintron_Utility sprintron_MaxNSNumber:slave_rssi_entry];
+    
+    if([m_range_rssi integerValue] > [s_range_rssi integerValue]) {
+        return m_range_rssi;
+    }
+    else{
+        return s_range_rssi;
+    }
+}
+
+
 - (void)peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error
 {
-    static NSInteger rssi_array_index = 0;
+    
     
     NSLog(@"RSSI:%d",[peripheral.RSSI intValue]);
+    
+    self.rssi = peripheral.RSSI;
+    
+    [self rssi_window_proceed_with_newRSSI:peripheral.RSSI];
+    self.calculated_range_indicator_rssi = [self cal_rssi];
     
     if(configProfile.out_of_range_alert){
         
         NSInteger threshold_int = [[threshold_detail objectAtIndex:configProfile.threshold] intValue];
-        if ([peripheral.RSSI intValue] < threshold_int && range_state < RED_ALERT) {
+        if ([self.calculated_range_indicator_rssi intValue] < threshold_int && range_state < RED_ALERT) {
             [self alert:@"out of range"];
             range_state = RED_ALERT;
         }
-        else if( range_state == RED_ALERT && [peripheral.RSSI intValue] > threshold_int + 20) {
+        else if( range_state == RED_ALERT && [self.calculated_range_indicator_rssi intValue] > threshold_int + 20) {
             range_state = NO_ALERT;
         }
         
     }
-    //NSLog([peripheral.RSSI stringValue]);
+    
+    NSLog(@"Filtered RSSI:%d",[self.calculated_range_indicator_rssi integerValue]);
+
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error
@@ -213,8 +295,18 @@
             NSLog(@"Set RSSI update indication");
             [self set_notification];
         }
+        else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0x2a07"]]) {
+            NSLog(@"Read remote TX Power.");
+            // Read remote TX Power.
+            [self read_remote_TX_power];
+        }
+        else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]) {
+            // Connection update to 1s interval.
+            [self connection_updateWithdata:[Sprintron_Utility stringToHexData:@"2003f40100002000c800"]];
+        }
         
-        [peripheral discoverDescriptorsForCharacteristic:characteristic];
+        
+        //[peripheral discoverDescriptorsForCharacteristic:characteristic];
     }
     
 }
@@ -277,6 +369,8 @@
     }
     return @"Not Connected";
 }
+
+
 
 
 @end

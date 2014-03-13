@@ -46,4 +46,19 @@
     
     return [NSNumber numberWithInt:output];
 }
+
++ (NSNumber *) sprintron_MaxNSNumber:(NSMutableArray*) array {
+    if ([array count] == 0){
+        return nil;
+    }
+    NSNumber *max = [array objectAtIndex:0];
+    
+    for(NSNumber* num in array){
+        if ([max integerValue] < [num integerValue]){
+            max = num;
+        }
+    }
+    
+    return max;
+}
 @end

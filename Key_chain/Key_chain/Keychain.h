@@ -45,6 +45,7 @@
 @property NSInteger range_state;
 @property BOOL findme_status;
 @property NSData* conn_params;
+@property NSNumber* key_rssi_value;
 
 
 - (id) init;

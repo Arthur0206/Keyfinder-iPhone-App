@@ -11,6 +11,7 @@
 #import "CoreBluetooth/CBCharacteristic.h"
 #import "CoreBluetooth/CBUUID.h"
 #import "BLECentralSingleton.h"
+#import "Sprintron_Utility.h"
 
 @interface Keychain ()
 
@@ -132,6 +133,7 @@
 
     if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc1"]]){
         NSLog(@"REMOTE RSSI update:%@",characteristic.value);
+        self.key_rssi_value = [Sprintron_Utility NSDataToNSNumber:characteristic.value];
         [self.peripheral readRSSI];
     }
     else if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){

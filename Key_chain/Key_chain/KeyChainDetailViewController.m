@@ -48,6 +48,7 @@
     self.disconnection_alert_from_ui.on = keychain.configProfile.disconnection_alert;
     self.alert_threshold_from_ui.selectedSegmentIndex = keychain.configProfile.threshold;
     self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
+    self.key_rssi_label.text = [keychain.key_rssi_value stringValue];
     self.status_label.text = [keychain connectionState];
     
     [self startRepeatingTimer];
@@ -90,6 +91,7 @@
 
     self.status_label.text = [keychain connectionState];
     self.rssi_label.text = [keychain.peripheral.RSSI stringValue];
+    self.key_rssi_label.text = [keychain.key_rssi_value stringValue];
 
 }
 

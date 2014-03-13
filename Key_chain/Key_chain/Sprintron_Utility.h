@@ -12,4 +12,6 @@
 
 // Decodes an NSString containing hex encoded bytes into an NSData object
 + (NSData *) stringToHexData:(NSString*) input;
+
++ (NSNumber *) NSDataToNSNumber:(NSData*) input;
 @end

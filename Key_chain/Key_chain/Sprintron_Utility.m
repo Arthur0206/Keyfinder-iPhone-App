@@ -33,5 +33,17 @@
     return data;
 }
 
-
++ (NSNumber *) NSDataToNSNumber:(NSData*) input
+{
+    
+    char *bytePtr = (char *)[input bytes];
+    int len = [input length];
+    int  output = 0;
+    
+    for(int i = 0 ; i < len; i++) {
+        output = (output << 8)  + bytePtr[i];
+    }
+    
+    return [NSNumber numberWithInt:output];
+}
 @end

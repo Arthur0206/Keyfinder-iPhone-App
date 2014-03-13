@@ -28,4 +28,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *status_label;
 @property (weak, nonatomic) IBOutlet UILabel *rssi_label;
 @property (weak, nonatomic) IBOutlet UILabel *name_label;
+@property (weak, nonatomic) IBOutlet UILabel *key_rssi_label;
 @end

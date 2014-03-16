@@ -32,6 +32,7 @@
 
 @optional
 - (void) didReadConnParams;
+- (void) didWriteFindMeStatus;
 
 @end
 

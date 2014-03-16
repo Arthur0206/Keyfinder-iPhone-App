@@ -102,8 +102,21 @@
 
 -(IBAction) press_findme:(id)sender {
     
-    if(keychain.findme_status == NO){
+    if([self.find_me_button.titleLabel.text isEqualToString:@"Find Me"] && keychain.findme_status == NO){
+        keychain.delegate = self;
+        [keychain find_key:1];
         
+    }
+    else if ([self.find_me_button.titleLabel.text isEqualToString:@"Stop"] && keychain.findme_status == YES)   {
+        keychain.delegate = self;
+        [keychain find_key:0];
+    }
+        
+}
+
+- (void) didWriteFindMeStatus {
+    // TODO
+    if(keychain.findme_status == NO){
         CABasicAnimation *pulseAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         pulseAnimation.duration = .5;
         pulseAnimation.toValue = [NSNumber numberWithFloat:1.1];
@@ -113,17 +126,13 @@
         [self.find_me_button.layer addAnimation:pulseAnimation forKey:@"find_me_flash"];
         [self.find_me_button setTitle:@"Stop" forState:UIControlStateNormal] ;
         
-        [keychain find_key:1];
         keychain.findme_status = YES;
-        
     }
     else {
         [self.find_me_button.layer removeAnimationForKey:@"find_me_flash"];
         [self.find_me_button setTitle:@"Find Me" forState:UIControlStateNormal] ;
-        [keychain find_key:0];
         keychain.findme_status = NO;
     }
-        
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

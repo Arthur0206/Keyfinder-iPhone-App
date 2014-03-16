@@ -151,7 +151,7 @@
         [peripheral readRSSI];
     }
     else if ( [[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){
-        
+        /*
         NSLog(@"AV Alert%@", characteristic.value);
         
         unsigned char *status = [characteristic.value bytes];
@@ -162,7 +162,7 @@
         }
         else{
             self.findme_status = NO;
-        }
+        }*/
     }
     else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
         self.conn_params = characteristic.value;
@@ -182,7 +182,8 @@
         //[self read_connectionParams];
     }
     else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){
-        [self find_key_status];
+        //[self find_key_status];
+        [[self delegate] didWriteFindMeStatus];
     }
 }
 

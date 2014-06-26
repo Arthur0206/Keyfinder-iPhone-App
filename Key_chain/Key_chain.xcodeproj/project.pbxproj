@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		366BF82419553A2500C5A2C3 /* KeyChainAddNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 366BF82319553A2500C5A2C3 /* KeyChainAddNewViewController.m */; };
 		36A5A54C187D2AB40011D16E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A5A54B187D2AB40011D16E /* Foundation.framework */; };
 		36A5A54E187D2AB40011D16E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A5A54D187D2AB40011D16E /* CoreGraphics.framework */; };
 		36A5A550187D2AB40011D16E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A5A54F187D2AB40011D16E /* UIKit.framework */; };
@@ -26,6 +27,7 @@
 		36C3419418C75D630022BD0A /* KeyChainSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419318C75D630022BD0A /* KeyChainSettingViewController.m */; };
 		36C3419718C839730022BD0A /* SprintronCBPeripheral.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419618C839730022BD0A /* SprintronCBPeripheral.m */; };
 		36C3419A18CC7E9B0022BD0A /* Conn_params_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419918CC7E9B0022BD0A /* Conn_params_ViewController.m */; };
+		36F49DD918D7F57B00B2DBBB /* KeyChainLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F49DD818D7F57B00B2DBBB /* KeyChainLocationViewController.m */; };
 		36F9A9C318B9CE8A00DFFCEA /* KeychainProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F9A9C218B9CE8A00DFFCEA /* KeychainProfile.m */; };
 		36F9EC3718AF1F4500B7E664 /* Keychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F9EC3618AF1F4500B7E664 /* Keychain.m */; };
 		36F9EC3A18B080FF00B7E664 /* KeyChainDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F9EC3918B080FF00B7E664 /* KeyChainDetailViewController.m */; };
@@ -45,6 +47,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		366BF82219553A2500C5A2C3 /* KeyChainAddNewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChainAddNewViewController.h; sourceTree = "<group>"; };
+		366BF82319553A2500C5A2C3 /* KeyChainAddNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChainAddNewViewController.m; sourceTree = "<group>"; };
 		36A5A548187D2AB40011D16E /* Key_chain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Key_chain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36A5A54B187D2AB40011D16E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		36A5A54D187D2AB40011D16E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -74,6 +78,8 @@
 		36C3419618C839730022BD0A /* SprintronCBPeripheral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SprintronCBPeripheral.m; sourceTree = "<group>"; };
 		36C3419818CC7E9B0022BD0A /* Conn_params_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conn_params_ViewController.h; sourceTree = "<group>"; };
 		36C3419918CC7E9B0022BD0A /* Conn_params_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Conn_params_ViewController.m; sourceTree = "<group>"; };
+		36F49DD718D7F57B00B2DBBB /* KeyChainLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChainLocationViewController.h; sourceTree = "<group>"; };
+		36F49DD818D7F57B00B2DBBB /* KeyChainLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChainLocationViewController.m; sourceTree = "<group>"; };
 		36F9A9C118B9CE8A00DFFCEA /* KeychainProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainProfile.h; sourceTree = "<group>"; };
 		36F9A9C218B9CE8A00DFFCEA /* KeychainProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainProfile.m; sourceTree = "<group>"; };
 		36F9EC3518AF1F4500B7E664 /* Keychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keychain.h; sourceTree = "<group>"; };
@@ -169,6 +175,10 @@
 				36A5A55D187D2AB40011D16E /* Main.storyboard */,
 				36A5A566187D2AB40011D16E /* Images.xcassets */,
 				36A5A552187D2AB40011D16E /* Supporting Files */,
+				36F49DD718D7F57B00B2DBBB /* KeyChainLocationViewController.h */,
+				36F49DD818D7F57B00B2DBBB /* KeyChainLocationViewController.m */,
+				366BF82219553A2500C5A2C3 /* KeyChainAddNewViewController.h */,
+				366BF82319553A2500C5A2C3 /* KeyChainAddNewViewController.m */,
 			);
 			path = Key_chain;
 			sourceTree = "<group>";
@@ -322,6 +332,8 @@
 				36FFBAE818CD02A9009501A5 /* Sprintron_Utility.m in Sources */,
 				36A5A588187DB4F90011D16E /* KeyChainViewController.m in Sources */,
 				36A5A558187D2AB40011D16E /* main.m in Sources */,
+				366BF82419553A2500C5A2C3 /* KeyChainAddNewViewController.m in Sources */,
+				36F49DD918D7F57B00B2DBBB /* KeyChainLocationViewController.m in Sources */,
 				36F9EC3A18B080FF00B7E664 /* KeyChainDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -340,6 +340,7 @@
     //[self set_notification];
     
 }
+
 - (void) connection_updateWithdata:(NSData*)data{
     CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa6" andCharacteristicUUID:@"0xffc6"];
     

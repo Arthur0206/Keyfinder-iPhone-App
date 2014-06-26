@@ -8,6 +8,7 @@
 
 #import "KeyChainDetailViewController.h"
 #import "Conn_params_ViewController.h"
+#import "KeyChainLocationViewController.h"
 
 @interface KeyChainDetailViewController ()
 
@@ -17,8 +18,6 @@
 
 @synthesize keychain;
 @synthesize repeatingTimer;
-@synthesize map;
-@synthesize locationManager;
 @synthesize actView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -53,15 +52,9 @@
     
     [self startRepeatingTimer];
     
- /*   if (!locationManager){
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.distanceFilter = kCLDistanceFilterNone;
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    }
-    [locationManager startUpdatingLocation];*/
+
     
-    map.delegate = self;
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -103,20 +96,7 @@
 -(IBAction) press_findme:(id)sender {
     
     if([self.find_me_button.titleLabel.text isEqualToString:@"Find Me"] && keychain.findme_status == NO){
-        keychain.delegate = self;
-        [keychain find_key:1];
         
-    }
-    else if ([self.find_me_button.titleLabel.text isEqualToString:@"Stop"] && keychain.findme_status == YES)   {
-        keychain.delegate = self;
-        [keychain find_key:0];
-    }
-        
-}
-
-- (void) didWriteFindMeStatus {
-    // TODO
-    if(keychain.findme_status == NO){
         CABasicAnimation *pulseAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         pulseAnimation.duration = .5;
         pulseAnimation.toValue = [NSNumber numberWithFloat:1.1];
@@ -126,11 +106,28 @@
         [self.find_me_button.layer addAnimation:pulseAnimation forKey:@"find_me_flash"];
         [self.find_me_button setTitle:@"Stop" forState:UIControlStateNormal] ;
         
+        keychain.delegate = self;
+        [keychain find_key:1];
+        
+    }
+    else if ([self.find_me_button.titleLabel.text isEqualToString:@"Stop"] && keychain.findme_status == YES)   {
+        [self.find_me_button.layer removeAnimationForKey:@"find_me_flash"];
+        [self.find_me_button setTitle:@"Find Me" forState:UIControlStateNormal] ;
+        keychain.delegate = self;
+        [keychain find_key:0];
+    }
+        
+}
+
+- (void) didWriteFindMeStatus {
+    // TODO
+    if(keychain.findme_status == NO){
+
+        
         keychain.findme_status = YES;
     }
     else {
-        [self.find_me_button.layer removeAnimationForKey:@"find_me_flash"];
-        [self.find_me_button setTitle:@"Find Me" forState:UIControlStateNormal] ;
+
         keychain.findme_status = NO;
     }
 }
@@ -185,26 +182,6 @@
 }
 
 
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
-{
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
-    
-    [map setRegion:[map regionThatFits:region] animated:YES];
-    
-
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    CLLocation* location = [locations lastObject];
-    
-    NSLog(@"Location: %f %f\n",location.coordinate.latitude,location.coordinate.longitude);
-    
-    keychain.configProfile.location = location;
-
-    
-    [self.locationManager stopUpdatingLocation];
-}
 
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -212,6 +189,10 @@
 
     if ([[segue identifier] isEqualToString:@"detailToConnParams"]) {
         Conn_params_ViewController* controller = [segue destinationViewController];
+        controller.keychain = keychain;
+    }
+    else if([[segue identifier] isEqualToString:@"detailToMap"]){
+        KeyChainLocationViewController* controller = [segue destinationViewController];
         controller.keychain = keychain;
     }
 }

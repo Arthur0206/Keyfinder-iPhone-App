@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2JT-NE-g06">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2JT-NE-g06">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
         <!--Key Chain View Controller - KeyChain List-->
@@ -457,6 +457,7 @@
                         <outlet property="disconnection_alert_from_ui" destination="nB0-VG-sn7" id="rPc-02-WAZ"/>
                         <outlet property="filtered_rssi_label" destination="yrj-ZE-gcP" id="2Wd-fK-HDM"/>
                         <outlet property="find_me_button" destination="tAQ-ie-B09" id="k2c-Rg-tL8"/>
+                        <outlet property="image" destination="DHy-fc-tal" id="qxM-dx-zY6"/>
                         <outlet property="key_rssi_label" destination="sq3-r3-Ho0" id="aJe-Yo-UxA"/>
                         <outlet property="name_label" destination="nPA-Ts-qu6" id="Z3Z-QP-IH6"/>
                         <outlet property="out_of_range_alert_from_ui" destination="MdK-3j-zLf" id="jWG-ii-D7L"/>
@@ -555,6 +556,34 @@
             </objects>
             <point key="canvasLocation" x="1091" y="1156"/>
         </scene>
+        <!--Camera View Controller-->
+        <scene sceneID="VST-gF-37l">
+            <objects>
+                <viewController id="cmi-3a-Wqx" customClass="CameraViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gkt-d1-anW"/>
+                        <viewControllerLayoutGuide type="bottom" id="yc7-pF-bg2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="X5e-7K-Wof">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a6x-yJ-EOl">
+                                <rect key="frame" x="0.0" y="118" width="320" height="320"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="J5h-hs-9Mm"/>
+                    <connections>
+                        <outlet property="imageview" destination="a6x-yJ-EOl" id="DM1-7V-bcF"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DNf-hV-DHJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1718" y="943"/>
+        </scene>
         <!--Key Chain Setting View Controller - KeyChain Profile-->
         <scene sceneID="C4H-el-QG8">
             <objects>
@@ -604,8 +633,26 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Sprintron_logo_300x300.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="XF8-Tq-Qb8">
-                                                    <rect key="frame" x="115" y="3" width="100" height="100"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XYZ-A6-kcn">
+                                                    <rect key="frame" x="-9" y="66" width="126" height="39"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" title="Take Photo">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <segue destination="cmi-3a-Wqx" kind="push" identifier="TakePix" id="FXD-Zc-3v1"/>
+                                                    </connections>
+                                                </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Sprintron_logo_300x300.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="uTG-lQ-fo8">
+                                                    <rect key="frame" x="125" y="0.0" width="114" height="104"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Sprintron_logo_300x300.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="eTF-bG-eHU">
+                                                    <rect key="frame" x="125" y="1" width="114" height="104"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Sprintron_logo_300x300.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="A9G-dX-vtU">
+                                                    <rect key="frame" x="125" y="1" width="114" height="104"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
                                             </subviews>
@@ -698,6 +745,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="disconnection_alert_setting_from_ui" destination="c4q-ft-d3a" id="E9E-yE-bZJ"/>
+                        <outlet property="keychainImage" destination="uTG-lQ-fo8" id="6rB-Wt-G7T"/>
                         <outlet property="name_input_from_ui" destination="Hb6-ON-qB3" id="xhX-QD-r5c"/>
                         <outlet property="out_of_range_alert_setting_from_ui" destination="uEC-nX-nKp" id="C5q-in-HKk"/>
                         <outlet property="threshold_setting_from_ui" destination="FdF-4K-afT" id="tK6-kZ-DTa"/>

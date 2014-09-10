@@ -11,6 +11,7 @@
 #import "Keychain.h"
 #import "KeychainProfile.h"
 #import "Sprintron_Utility.h"
+#import "CameraViewController.h"
 
 @interface KeyChainSettingViewController ()
 
@@ -50,52 +51,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view data source
-
-
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
-#pragma mark - Navigation
-
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -109,15 +64,20 @@
         BOOL out_of_range_alert_on = self.out_of_range_alert_setting_from_ui.on;
         BOOL disconnection_alert_on = self.disconnection_alert_setting_from_ui.on;
 
+        // Create the image file name from keychain profile name.
+        NSString *imageFileName = [NSString stringWithFormat:@"%@%@", name, @".png"];
         
-        // Create config progile for key chain
-        KeychainProfile *profile = [[KeychainProfile alloc] initWithName:name andthreshold:threshold andBDaddr:bd_addr andOutofRangeAlert:out_of_range_alert_on andDisconnectionAlert:disconnection_alert_on];
+        // Create config profile for key chain
+        KeychainProfile *profile = [[KeychainProfile alloc] initWithName:name andthreshold:threshold andBDaddr:bd_addr andOutofRangeAlert:out_of_range_alert_on andDisconnectionAlert:disconnection_alert_on andImageName:imageFileName];
         
         // Create key chain instance
         Keychain *keychain = [[Keychain alloc] initWithKeyProfile:profile andPeripheral:sprintron_peripheral.peripheral];
         
         // Add new key chain to list.
         [BLECentralSingleton addObjectToBLERegistered_peripheral_list:keychain];
+        
+        // Save image to Document path.
+        [keychain saveimage:self.keychainImage.image imageName:imageFileName];
         
         // Start RSSI Reading.
         [keychain set_notification];
@@ -128,8 +88,19 @@
         // Connection update to 1s interval.
         [keychain connection_updateWithdata:[Sprintron_Utility stringToHexData:@"2003f40100002000c800"]];
         
+        // Save image to keychain profile.
+        keychain.image = self.keychainImage.image;
+        
+        
+    }
+    else if ([[segue identifier] isEqualToString:@"TakePix"]) {
+        CameraViewController* camviewcontroller =[segue destinationViewController];
+        camviewcontroller.key_chain_setting_controller = self;
+        
     }
 }
+
+
 
 
 @end

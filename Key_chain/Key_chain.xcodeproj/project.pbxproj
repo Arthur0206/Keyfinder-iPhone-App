@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36220C6A195FC7BD003DF68C /* CameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36220C69195FC7BD003DF68C /* CameraViewController.m */; };
+		364FE1F8199B228A007147BB /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 364FE1F7199B228A007147BB /* icon.png */; };
 		366BF82419553A2500C5A2C3 /* KeyChainAddNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 366BF82319553A2500C5A2C3 /* KeyChainAddNewViewController.m */; };
 		36A5A54C187D2AB40011D16E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A5A54B187D2AB40011D16E /* Foundation.framework */; };
 		36A5A54E187D2AB40011D16E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A5A54D187D2AB40011D16E /* CoreGraphics.framework */; };
@@ -47,6 +49,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		36220C68195FC7BD003DF68C /* CameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraViewController.h; sourceTree = "<group>"; };
+		36220C69195FC7BD003DF68C /* CameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraViewController.m; sourceTree = "<group>"; };
+		364FE1F7199B228A007147BB /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		366BF82219553A2500C5A2C3 /* KeyChainAddNewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChainAddNewViewController.h; sourceTree = "<group>"; };
 		366BF82319553A2500C5A2C3 /* KeyChainAddNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChainAddNewViewController.m; sourceTree = "<group>"; };
 		36A5A548187D2AB40011D16E /* Key_chain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Key_chain.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,7 +61,7 @@
 		36A5A553187D2AB40011D16E /* Key_chain-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Key_chain-Info.plist"; sourceTree = "<group>"; };
 		36A5A555187D2AB40011D16E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		36A5A557187D2AB40011D16E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		36A5A559187D2AB40011D16E /* Key_chain-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Key_chain-Prefix.pch"; sourceTree = "<group>"; };
+		36A5A559187D2AB40011D16E /* Key Finder-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Key Finder-Prefix.pch"; sourceTree = "<group>"; };
 		36A5A55A187D2AB40011D16E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		36A5A55B187D2AB40011D16E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		36A5A55E187D2AB40011D16E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -179,6 +184,8 @@
 				36F49DD818D7F57B00B2DBBB /* KeyChainLocationViewController.m */,
 				366BF82219553A2500C5A2C3 /* KeyChainAddNewViewController.h */,
 				366BF82319553A2500C5A2C3 /* KeyChainAddNewViewController.m */,
+				36220C68195FC7BD003DF68C /* CameraViewController.h */,
+				36220C69195FC7BD003DF68C /* CameraViewController.m */,
 			);
 			path = Key_chain;
 			sourceTree = "<group>";
@@ -186,13 +193,14 @@
 		36A5A552187D2AB40011D16E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				364FE1F7199B228A007147BB /* icon.png */,
 				36F9EC3E18B2F76D00B7E664 /* Sprintron_logo_300x300.jpg */,
 				36A5A55A187D2AB40011D16E /* AppDelegate.h */,
 				36A5A55B187D2AB40011D16E /* AppDelegate.m */,
 				36A5A553187D2AB40011D16E /* Key_chain-Info.plist */,
 				36A5A554187D2AB40011D16E /* InfoPlist.strings */,
 				36A5A557187D2AB40011D16E /* main.m */,
-				36A5A559187D2AB40011D16E /* Key_chain-Prefix.pch */,
+				36A5A559187D2AB40011D16E /* Key Finder-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -263,6 +271,7 @@
 				ORGANIZATIONNAME = "Brandon Chen";
 				TargetAttributes = {
 					36A5A547187D2AB40011D16E = {
+						DevelopmentTeam = RXXZLPS2W2;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -299,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				36A5A567187D2AB40011D16E /* Images.xcassets in Resources */,
+				364FE1F8199B228A007147BB /* icon.png in Resources */,
 				36F9EC3F18B2F76D00B7E664 /* Sprintron_logo_300x300.jpg in Resources */,
 				36A5A556187D2AB40011D16E /* InfoPlist.strings in Resources */,
 				36A5A55F187D2AB40011D16E /* Main.storyboard in Resources */,
@@ -329,6 +339,7 @@
 				36A5A585187D2C470011D16E /* BLECentralSingleton.m in Sources */,
 				36A5A58B187DB7640011D16E /* BLEDeviceViewController.m in Sources */,
 				36A5A55C187D2AB40011D16E /* AppDelegate.m in Sources */,
+				36220C6A195FC7BD003DF68C /* CameraViewController.m in Sources */,
 				36FFBAE818CD02A9009501A5 /* Sprintron_Utility.m in Sources */,
 				36A5A588187DB4F90011D16E /* KeyChainViewController.m in Sources */,
 				36A5A558187D2AB40011D16E /* main.m in Sources */,
@@ -461,10 +472,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Key_chain/Key_chain-Prefix.pch";
 				INFOPLIST_FILE = "Key_chain/Key_chain-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Key_chain;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -474,10 +486,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Key_chain/Key_chain-Prefix.pch";
 				INFOPLIST_FILE = "Key_chain/Key_chain-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Key_chain;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -499,7 +512,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Key_chainTests/Key_chainTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Key_chainTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -518,7 +531,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Key_chain/Key_chain-Prefix.pch";
 				INFOPLIST_FILE = "Key_chainTests/Key_chainTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Key_chainTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};

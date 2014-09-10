@@ -35,6 +35,7 @@
 @synthesize key_rssi_value;
 @synthesize rssi;
 @synthesize key_chain_TX_power;
+@synthesize image;
 
 
 
@@ -87,8 +88,8 @@
 }
 
 
-- (void) set_notification {
-    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa1" andCharacteristicUUID:@"0xffc1"];
+- (void) set_notification:(NSString*) ServiceUUID_string andCharacteristicUUID: (NSString*) CharacteristicUUID_string {
+    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:ServiceUUID_string andCharacteristicUUID:CharacteristicUUID_string];
     if (characteristic){
         self.peripheral.delegate = self;
         [self.peripheral setNotifyValue:YES forCharacteristic:characteristic];
@@ -156,7 +157,6 @@
         
         unsigned char *status = [characteristic.value bytes];
         
-        
         if(status[0] == 0x01){
             self.findme_status = YES;
         }
@@ -165,6 +165,10 @@
         }*/
     }
     else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
+        NSLog(@"Panic Mode%@", characteristic.value);
+        [self alert:@"Panic Panic Panic Panic"];
+    }
+    else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc7"]]){
         self.conn_params = characteristic.value;
         NSLog(@"didUpdateValue:%@\n",characteristic.UUID.data);
         NSLog(@"Value:%@\n",characteristic.value);
@@ -178,7 +182,7 @@
 
 }
 - (void)peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
-    if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]){
+    if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc7"]]){
         //[self read_connectionParams];
     }
     else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc5"]]){
@@ -294,7 +298,7 @@
         
         if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc1"]]) {
             NSLog(@"Set RSSI update indication");
-            [self set_notification];
+            [self set_notification: @"0xffa1" andCharacteristicUUID:@"0xffc1"];
         }
         else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0x2a07"]]) {
             NSLog(@"Read remote TX Power.");
@@ -302,6 +306,11 @@
             [self read_remote_TX_power];
         }
         else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc6"]]) {
+            // Set Notification for Panic feature.
+            [self set_notification: @"0xffa6" andCharacteristicUUID:@"0xffc6"];
+           
+        }
+        else if([[characteristic UUID] isEqual:[CBUUID UUIDWithString:@"0xffc7"]]) {
             // Connection update to 1s interval.
             [self connection_updateWithdata:[Sprintron_Utility stringToHexData:@"2003f40100002000c800"]];
         }
@@ -372,9 +381,31 @@
     return @"Not Connected";
 }
 
+// Save image to document path.
+-(void) saveimage:(UIImage*) image imageName:(NSString*)imageName
+{
+    
+    NSData *pngImageData = UIImagePNGRepresentation(image);
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains (NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths firstObject];
+    
+    NSString *fileName = [NSString stringWithFormat:@"%@/%@",
+                          documentsDirectory,imageName];
+    
+    [pngImageData writeToFile:fileName atomically:YES];
+}
 
+// Load image from document path.
+- (void)loadImage
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    NSString* path = [NSString stringWithFormat:@"%@/%@", documentsDirectory,self.configProfile.imageName];
+    UIImage* icon_image = [UIImage imageWithContentsOfFile:path];
+    self.image = icon_image;
+}
 
 
 @end
-
-

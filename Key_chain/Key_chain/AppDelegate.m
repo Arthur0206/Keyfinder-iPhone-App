@@ -20,9 +20,17 @@
     NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"key_profile"];
     NSMutableArray* key_profile_list = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     NSMutableArray* registerList = [BLECentralSingleton getBLERegistered_peripheral_list];
+    
     for (KeychainProfile* key_profile in  key_profile_list) {
-        [registerList addObject:[[Keychain alloc] initWithKeyProfile:key_profile andPeripheral:nil] ];
+        
+        Keychain* keychain = [[Keychain alloc] initWithKeyProfile:key_profile andPeripheral:nil];
+        [keychain loadImage];
+        [registerList addObject: keychain];
+        
+        
+        
     }
+    
     
     return YES;
 }

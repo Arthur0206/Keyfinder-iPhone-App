@@ -52,6 +52,8 @@
 @property NSNumber* rssi;
 @property NSNumber* key_chain_TX_power;
 @property NSNumber* calculated_range_indicator_rssi;
+@property UIImage* image;
+
 
 
 - (id) init;
@@ -64,5 +66,8 @@
 - (void) connection_updateWithdata:(NSData*)data;
 - (void) read_connectionParams;
 - (NSString*) connectionState;
+- (void) saveimage:(UIImage*) image imageName:(NSString*)imageName;
+- (void)loadImage;
+- (void) set_notification:(NSString*) ServiceUUID_string andCharacteristicUUID: (NSString*) CharacteristicUUID_string;
 
 @end

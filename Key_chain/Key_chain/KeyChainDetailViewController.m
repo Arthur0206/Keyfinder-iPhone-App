@@ -20,6 +20,7 @@
 @synthesize repeatingTimer;
 @synthesize actView;
 
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -49,12 +50,9 @@
     self.rssi_label.text = [keychain.rssi stringValue];
     self.key_rssi_label.text = [keychain.key_rssi_value stringValue];
     self.status_label.text = [keychain connectionState];
-    
+    self.image.image = keychain.image;
     [self startRepeatingTimer];
     
-
-    
-
 }
 
 - (void)didReceiveMemoryWarning

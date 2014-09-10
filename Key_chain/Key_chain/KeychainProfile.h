@@ -17,8 +17,10 @@
 @property BOOL out_of_range_alert;
 @property BOOL disconnection_alert;
 @property CLLocation* location;
+@property NSString* imageName;
 
 -(id) initWithName:(NSString*)s_name andthreshold:(NSInteger) thres andBDaddr: (NSData*)BDaddr
-andOutofRangeAlert:(BOOL)out_of_range_alert_on andDisconnectionAlert:(BOOL)disconnection_alert_on;
+andOutofRangeAlert:(BOOL)out_of_range_alert_on andDisconnectionAlert:(BOOL)disconnection_alert_on
+      andImageName: (NSString*) name;
 
 @end

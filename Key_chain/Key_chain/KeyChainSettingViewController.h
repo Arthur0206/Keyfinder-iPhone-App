@@ -11,9 +11,14 @@
 #import "SprintronCBPeripheral.h"
 
 @interface KeyChainSettingViewController : UITableViewController 
+
+@property (weak, nonatomic) IBOutlet UIImageView *keychainImage;
+
+
 @property (weak, nonatomic) IBOutlet UITextField *name_input_from_ui;
 @property (weak, nonatomic) IBOutlet UISwitch *disconnection_alert_setting_from_ui;
 @property (weak, nonatomic) IBOutlet UISwitch *out_of_range_alert_setting_from_ui;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *threshold_setting_from_ui;
+@property (weak, nonatomic) IBOutlet UIImageView *image;
 @property (strong, nonatomic) SprintronCBPeripheral* sprintron_peripheral;
 @end

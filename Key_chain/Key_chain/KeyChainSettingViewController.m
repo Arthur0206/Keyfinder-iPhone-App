@@ -80,7 +80,7 @@
         [keychain saveimage:self.keychainImage.image imageName:imageFileName];
         
         // Start RSSI Reading.
-        [keychain set_notification];
+        [keychain init_notification];
         
         // Read remote TX Power.
         [keychain read_remote_TX_power];

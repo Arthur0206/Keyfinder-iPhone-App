@@ -643,15 +643,7 @@
                                                         <segue destination="cmi-3a-Wqx" kind="push" identifier="TakePix" id="FXD-Zc-3v1"/>
                                                     </connections>
                                                 </button>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Sprintron_logo_300x300.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="uTG-lQ-fo8">
-                                                    <rect key="frame" x="125" y="0.0" width="114" height="104"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Sprintron_logo_300x300.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="eTF-bG-eHU">
-                                                    <rect key="frame" x="125" y="1" width="114" height="104"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Sprintron_logo_300x300.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="A9G-dX-vtU">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon_120.png" translatesAutoresizingMaskIntoConstraints="NO" id="A9G-dX-vtU">
                                                     <rect key="frame" x="125" y="1" width="114" height="104"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -745,7 +737,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="disconnection_alert_setting_from_ui" destination="c4q-ft-d3a" id="E9E-yE-bZJ"/>
-                        <outlet property="keychainImage" destination="uTG-lQ-fo8" id="6rB-Wt-G7T"/>
+                        <outlet property="keychainImage" destination="A9G-dX-vtU" id="ffE-w4-Ckc"/>
                         <outlet property="name_input_from_ui" destination="Hb6-ON-qB3" id="xhX-QD-r5c"/>
                         <outlet property="out_of_range_alert_setting_from_ui" destination="uEC-nX-nKp" id="C5q-in-HKk"/>
                         <outlet property="threshold_setting_from_ui" destination="FdF-4K-afT" id="tK6-kZ-DTa"/>
@@ -757,7 +749,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Sprintron_logo_300x300.jpg" width="300" height="300"/>
+        <image name="icon_120.png" width="120" height="120"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

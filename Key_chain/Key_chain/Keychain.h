@@ -69,5 +69,6 @@
 - (void) saveimage:(UIImage*) image imageName:(NSString*)imageName;
 - (void)loadImage;
 - (void) set_notification:(NSString*) ServiceUUID_string andCharacteristicUUID: (NSString*) CharacteristicUUID_string;
+- (void) init_notification;
 
 @end

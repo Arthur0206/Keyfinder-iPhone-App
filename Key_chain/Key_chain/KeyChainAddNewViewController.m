@@ -62,7 +62,7 @@
 //    peripheral.delegate = self;
 //    [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0x1804"],[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID UUIDWithString:@"0xffa6"],nil ]];
     peripheral.delegate = self;
-    [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0x1804"],[CBUUID UUIDWithString:@"0xffa0"],[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID UUIDWithString:@"0xffa6"],nil ]];
+    [peripheral discoverServices:[NSArray arrayWithObjects:[CBUUID UUIDWithString:@"0x1804"],[CBUUID UUIDWithString:@"0xffa0"],[CBUUID UUIDWithString:@"0xffa1"],[CBUUID UUIDWithString:@"0xffa5"],[CBUUID UUIDWithString:@"0xffa6"],[CBUUID UUIDWithString:@"0xffa7"],nil ]];
     
     
 }

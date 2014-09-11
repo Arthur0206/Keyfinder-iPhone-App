@@ -29,6 +29,7 @@
 		36C3419418C75D630022BD0A /* KeyChainSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419318C75D630022BD0A /* KeyChainSettingViewController.m */; };
 		36C3419718C839730022BD0A /* SprintronCBPeripheral.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419618C839730022BD0A /* SprintronCBPeripheral.m */; };
 		36C3419A18CC7E9B0022BD0A /* Conn_params_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36C3419918CC7E9B0022BD0A /* Conn_params_ViewController.m */; };
+		36E7F07C19C1EA270069A0AD /* icon_120.png in Resources */ = {isa = PBXBuildFile; fileRef = 36E7F07B19C1EA270069A0AD /* icon_120.png */; };
 		36F49DD918D7F57B00B2DBBB /* KeyChainLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F49DD818D7F57B00B2DBBB /* KeyChainLocationViewController.m */; };
 		36F9A9C318B9CE8A00DFFCEA /* KeychainProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F9A9C218B9CE8A00DFFCEA /* KeychainProfile.m */; };
 		36F9EC3718AF1F4500B7E664 /* Keychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 36F9EC3618AF1F4500B7E664 /* Keychain.m */; };
@@ -61,7 +62,6 @@
 		36A5A553187D2AB40011D16E /* Key_chain-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Key_chain-Info.plist"; sourceTree = "<group>"; };
 		36A5A555187D2AB40011D16E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		36A5A557187D2AB40011D16E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		36A5A559187D2AB40011D16E /* Key Finder-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Key Finder-Prefix.pch"; sourceTree = "<group>"; };
 		36A5A55A187D2AB40011D16E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		36A5A55B187D2AB40011D16E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		36A5A55E187D2AB40011D16E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -83,6 +83,7 @@
 		36C3419618C839730022BD0A /* SprintronCBPeripheral.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SprintronCBPeripheral.m; sourceTree = "<group>"; };
 		36C3419818CC7E9B0022BD0A /* Conn_params_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conn_params_ViewController.h; sourceTree = "<group>"; };
 		36C3419918CC7E9B0022BD0A /* Conn_params_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Conn_params_ViewController.m; sourceTree = "<group>"; };
+		36E7F07B19C1EA270069A0AD /* icon_120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_120.png; sourceTree = "<group>"; };
 		36F49DD718D7F57B00B2DBBB /* KeyChainLocationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyChainLocationViewController.h; sourceTree = "<group>"; };
 		36F49DD818D7F57B00B2DBBB /* KeyChainLocationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyChainLocationViewController.m; sourceTree = "<group>"; };
 		36F9A9C118B9CE8A00DFFCEA /* KeychainProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainProfile.h; sourceTree = "<group>"; };
@@ -193,6 +194,7 @@
 		36A5A552187D2AB40011D16E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				36E7F07B19C1EA270069A0AD /* icon_120.png */,
 				364FE1F7199B228A007147BB /* icon.png */,
 				36F9EC3E18B2F76D00B7E664 /* Sprintron_logo_300x300.jpg */,
 				36A5A55A187D2AB40011D16E /* AppDelegate.h */,
@@ -200,7 +202,6 @@
 				36A5A553187D2AB40011D16E /* Key_chain-Info.plist */,
 				36A5A554187D2AB40011D16E /* InfoPlist.strings */,
 				36A5A557187D2AB40011D16E /* main.m */,
-				36A5A559187D2AB40011D16E /* Key Finder-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -311,6 +312,7 @@
 				364FE1F8199B228A007147BB /* icon.png in Resources */,
 				36F9EC3F18B2F76D00B7E664 /* Sprintron_logo_300x300.jpg in Resources */,
 				36A5A556187D2AB40011D16E /* InfoPlist.strings in Resources */,
+				36E7F07C19C1EA270069A0AD /* icon_120.png in Resources */,
 				36A5A55F187D2AB40011D16E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

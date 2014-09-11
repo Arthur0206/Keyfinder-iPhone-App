@@ -359,7 +359,7 @@
 }
     
 - (void) read_connectionParams{
-    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa6" andCharacteristicUUID:@"0xffc6"];
+    CBCharacteristic *characteristic = [self findCharacteristicWithServiceUUID:@"0xffa7" andCharacteristicUUID:@"0xffc7"];
 
     if (characteristic)
     {
@@ -407,5 +407,16 @@
     self.image = icon_image;
 }
 
+
+- (void) init_notification
+{
+    //Set RSSI update indication.
+    [self set_notification: @"0xffa1" andCharacteristicUUID:@"0xffc1"];
+    
+    // Set Notification for Panic feature.
+    [self set_notification: @"0xffa6" andCharacteristicUUID:@"0xffc6"];
+
+    
+}
 
 @end
